@@ -1,0 +1,21 @@
+### FILA
+	Estrutura Utilizada quando há a necessidade de armazenar um conjunto de dados antes de um processamento.
+	Existem basicamente 3 tipos:
+	*	Fila Linear
+	* 	Fila Circular
+	*	Fila com prioridade
+		\_ Pode Ser:	Linear
+						Circular
+	
+# Informações em uma Linha:
+	-Vetor que armazena os elementos;
+	-Tamanho do Vetor;
+	-Índice do Final da Fila(Contador);
+	-Índice do início da Fila.
+# Ações em uma linha:
+	-Inserir(push);
+	-Retirar(pop);
+	-Iniciar uma Fila;
+	-Listar
+	-Verificar se está cheia ou vazia.
+

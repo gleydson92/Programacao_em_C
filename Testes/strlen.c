@@ -1,5 +1,5 @@
 #include<stdio.h>
-int strlen(char *string){
+int strlen1(char *string){
 	int tamanho = 0;
 	while(*string){
 		*string++;
@@ -12,6 +12,6 @@ int main(void){
 	char string[30];
 	printf("Insira uma String:\n");
 	scanf("%[^\n]s",string);
-	tamanho = strlen(string);
+	tamanho = strlen1(string);
 	printf("O tamanho da String é:%d\n",tamanho);
 }
