@@ -1,15 +1,14 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<stdbool.h>
-/*Cabeçalho com os prótotipos de filas*/
-typedef struct{
-	int *elementos;
+#pragma once
+
+typedef struct {
+	int *elem;
 	unsigned int tamanho;
-	unsigned int inicio,fim;
-}fila;
-bool iniciar(unsigned int tamanho, struct fila *qual);
-bool push(int info, struct fila *qual);
-bool pop(struct fila *qual);
-int	*listar(struct fila qual);
-bool cheia(struct fila qual);
-bool vazia(struct fila qual);
+	unsigned int inicio, fim;
+}stFila;
+
+bool iniciar(unsigned int tamanho, stFila *qual);
+bool push(int valor, stFila *qual);
+bool pop(stFila *qual);
+int* listar(stFila qual, unsigned int *qtde);
+bool vazia(stFila qual);
+bool cheia(stFila qual);

@@ -1,0 +1,4 @@
+############ Fila Circular ###############
+- Implementação realmente utilizada de filas;
+- Visa resolver o problema de diminuição de espaço livre em uma fila linear;
+- Menos esforço que movimentar valores de posição -> mudar índices.
