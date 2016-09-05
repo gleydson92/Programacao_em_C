@@ -8,17 +8,30 @@
 #include <pthread.h>
 #include <termios.h>
 int kbhit(void);
+int getch(void);
+int getnum(void);
 int main(void){
 	while(1){
-		while(!kbhit()){}
-		printf("Você pressionou '%c'!\n",getchar());	
+		//while(!kbhit()){}
+		//int leitura=(int)getchar();
+		//int leitura = getch()-48;
+		int leitura = getnum();
+		printf("Você pressionou '%d'!\n",leitura);	
+		//char caractere = (char)leitura;		printf("Você pressionou '%c'!\n",caractere);	
 	}	
+}
+int getnum(void){
+	while(!kbhit()){}
+	return getchar()-48;	
+}
+int getch(void){
+	while(!kbhit()){}
+	return getchar();
 }
 int kbhit(void){
   struct termios oldt, newt;
   int ch=0;
   int oldf;
-  static int chamada;
   tcgetattr(STDIN_FILENO, &oldt);
   newt = oldt;
   newt.c_lflag &= ~(ICANON | ECHO);

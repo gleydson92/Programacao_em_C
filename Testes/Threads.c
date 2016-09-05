@@ -8,10 +8,17 @@
 #include <pthread.h>
 #include <termios.h>
 int kbhit(void);
-
-void *testThread(){
+struct arg_struct{
+	int row;
+	int col;
+};
+void *testThread(void *argumentos){
+	struct arg_struct *args = argumentos;
 	while(1){
-		while(!kbhit()){} printf("Mensagem C/ Thread!\n");
+		printf("Mensagem C/ Thread!\n");
+		while(!kbhit()){} 
+		getchar();
+		printf("Linha:%d\tColuna;%d\n",args->row++,args->col++);
 	}
 	//	printf("Você pressionou '%c'!\n",getchar());		
 	pthread_exit(NULL);
@@ -20,10 +27,14 @@ void *testThread(){
 int main(void){
 	pthread_t thread;
 	int threadcriada;
-	threadcriada = pthread_create(&thread,NULL,testThread,NULL);
+	struct arg_struct args;
+	args.row = 5;
+	args.col = 7;
+	threadcriada = pthread_create(&thread,NULL,testThread,(void*)&args);
 	while(1){
 		printf("Mensagem S/ Thread!\n");
 		while(!kbhit()){}	printf("Você pressionou '%c'!\n",getchar());	
+		printf("Linha:%d\tColuna;%d\n",args.row++,args.col++);
 	}
 }
 int kbhit(void){

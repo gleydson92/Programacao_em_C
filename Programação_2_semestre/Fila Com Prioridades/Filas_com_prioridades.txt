@@ -1,0 +1,11 @@
+		 +-----------------------+
+#########| Filas com Prioridades |##########
+		 +-----------------------+
+	- Utilizadas em casos específicas, onde a ordem de chagada deve ser respeitada,
+	porém existem parâmetros ou informações que devem ser tratadas mais rápido.
+	- Neste caso, é necessário adicionar um parâmetro a informação que irá para a fila, 
+	esse parâmetro é a " Prioridade ".
+	- Quanto maior a prioridade antes essa informação deve sair da fila.
+	- Para isso, é necessário mudar a inserção.
+
+	
