@@ -1,0 +1,22 @@
+	+-----------------+
+####|Listas Encadeadas|####
+	+-----------------+
+-Estrutura de dados para armazenamento de vários elementos,quando a quantidade
+de informações é muito grande.
+-Permite o armazenamento de dados de forma não contígua na memória RAM.
+*Desvantagens: Queda de desempenho da sua aplicação.
+**Equivale a um Vetor/Matriz. *Vantagem:Armazenamento não contíguo na memória RAM(Sequêncial).
+
+	*Sitaxe de Uma Lista:
+
+	struct lista{
+		data_type info;
+		struct lista *next;
+	};
+	*Funções:	
+	-Iniciar;
+	-Inserir;
+	-Remover;
+	-Buscar;
+	-Listar;
+	-Destruir;
