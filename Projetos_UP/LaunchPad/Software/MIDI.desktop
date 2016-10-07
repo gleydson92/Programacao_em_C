@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=LaunchPad MIDI Raspberry
+Comment=LaunchPad OpenSource
+#Lembrar de Alterar o Diretório
+Exec=bash -c '~/MIDI/Software/./main $SHELL'
+Terminal=true
+Type=Application
+Categories=Application;
+#Lembrar de Alterar o Diretório
+Icon=/home/calebe94/Projetos/MIDI/Icons/icon175x175.png
+#Lembrar de dar permissão "sudo chmod +x MIDI.desktop"
+
