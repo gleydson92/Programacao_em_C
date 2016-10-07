@@ -1,0 +1,20 @@
+ASCII Art Display 7 Segmentos		
+		  g f gnd a b			   
+		 _|_|__|__|_|_					TERMINAIS
+		|	      	  |		 			[01] G
+		| _____a_____ |		 			[02] F
+		||	     	 ||		   	 		[03] A
+		||	     	 ||		       		[04] B
+		|f	         b|			   		[05] E
+		||	   	 	 ||		 			[06] C
+		| _____g_____ |					[07] D 
+		||	   	 	 ||					[08] Base do 1º Transistor
+		||	      	 ||					[09] Nada
+		|e     	 	 c|		       		[10] Emissor 1º e 2º Transistor
+		||     	 	 ||         		[11] Base do 2º Transistor
+		| _____d_____ |				
+		|         DP* |	
+		|_____________|		
+		  | |  |  | |			
+		  e d gnd c DP		
+					 

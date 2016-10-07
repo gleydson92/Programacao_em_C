@@ -1,0 +1,46 @@
+################ TRABALHO BIMESTRAL ################
+*Disciplina: Sistemas Embarcados
+*Professor: Eduardo Juliano Alberti 
+*Instituição: Universidade Positivo
+*Curso: Engenharia da Computação
+
+********************Objetivo********************
+Desenvolver um sistema para um LavaCar.Todos os dias, pela manhã, 
+o LavaCar realiza o cadastros de todos os veículos que serão 
+lavados durante o dia. 
+
+Para a organização do processo o sistema realiza uma priorização 
+dos veículoas de acordo com as características do veículo e do 
+serviço. 
+
+Condições:	Quanto maior a prioridade, antes o veículo será 
+lavado.
+
+Portanto, devem ser implementados menus de cadastro de carros, de 
+serviços contratados e para ordenação/impressão de prioridades.
+
+*********************MENU**********************
+*Dados de Entrada do Cliente 
+
+	1- Nome
+	2- Telefone
+	3- Placa do Veículo
+	4- Tipo do Veículo:
+			1+ Carros Hatch
+			2+ Carros Sedan
+			3+ Motos
+			4+ Vans
+	5- Prioridades-Calculado automaticamente.
+		* Pesos:	
+			Lavagem Ecológia = 1
+			Lavagem Completa = -2
+			Aspirador = -1
+			Carros Hatch = -1
+			Carros Sedan = -2 
+			Vans = -4
+			Motos = 1
+	6- Serviços a serem realizados
+	
+	O Usuário poderá definir se a ordenação será por maior ou 
+menor prioridade.
+	O Limite de cadastro de carros é de 50 carros.

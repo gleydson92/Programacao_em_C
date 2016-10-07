@@ -1,0 +1,40 @@
+Usando scanf pode ficar caracteres sobrando no buffer, as vezes só usar getchar depois de scanf funciona o problema é se sobrar mais de 1 caractere, ai nem o getchar salva rsrs. Um jeito melhor é usando fgets, pesquise no vol deve ter uns exemplos :)
+
+
+printf("Digite o nome: ");
+scanf("%[A-Za-z ]s", &contato.nome);
+
+
+%[A-Za-z ]s
+Aqui vai só ler caracteres de A a Z ou de a a z ou "espaço"
+Quando o usuario apertar o enter, o \n vai ser armazenado na string
+
+%[A-Za-z ]s
+poderia ser só %[^\n]s, lê todos os caracteres com exceção do \n(nova linha, o "ENTER")
+
+http://www.vivaolinux.com.br/artigo/Parametros-interessantes-do-scanf-e-do-printf-em-C
+http://www.vivaolinux.com.br/dica/Lendo-strings-com-espaco-em-branco-usando-scanf/
+
+Nota: há outras maneiras de lê uma string sem ter que ficar "limpando" o buffer.
+
+
+int main() {
+  printf("Digite o nome: ");
+  scanf("%[A-Za-z ]s", &contato.nome);
+  getchar(); // lê o caractere sobrando
+
+  printf("Digite o e-mail: ");  
+  scanf("%[^\n]s", &contato.email); // todos os caracteres com exceção do \n
+  getchar();
+
+  printf("Digite o numero do telefone: ");
+  scanf("%s", &contato.tel);
+  getchar();
+
+  printf("Digite o numero do celular: ");
+  scanf("%s", &contato.cel);
+  getchar();
+
+  return 0;
+}
+

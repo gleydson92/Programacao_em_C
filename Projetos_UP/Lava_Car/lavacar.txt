@@ -1,0 +1,139 @@
+#	Este é um Exemplo da exportação de dados	#
+------------------------------------
+Nome do Cliente 1: Edimar Calebe Castanho 
+Número de Telefone do Cliente 1: 98271302
+Placa do Carro do Cliente 1: AOC-1212
+Tipo do Carro do Cliente 1: 2
+------------------------------------
+Nome do Cliente 2: Abner Garcia Castanho 
+Número de Telefone do Cliente 2: 32460323
+Placa do Carro do Cliente 2: AOC-1414
+Tipo do Carro do Cliente 2: 2
+#	Esta linha encerra a aquisição de dados do dia		#
+#==================================================#	
+
+-------------------------------------------------
+Nome do Cliente 1: Edimar Calebe Castanho 
+Número de Telefone do Cliente 1: 98271302
+Placa do Carro do Cliente 1: AOC-1212
+Tipo do Carro do Cliente 1: 2
+-------------------------------------------------
+Nome do Cliente 2: Abner Garcia Castanho 
+Número de Telefone do Cliente 2: 32460323
+Placa do Carro do Cliente 2: AOC-1414
+Tipo do Carro do Cliente 2: 1
+#==================================================#
+
+-------------------------------------------------
+Nome do Cliente 1:  
+Número de Telefone do Cliente 1: 
+Placa do Carro do Cliente 1: 
+Tipo do Carro do Cliente 1: 0
+-------------------------------------------------
+Nome do Cliente 2:  
+Número de Telefone do Cliente 2: 
+Placa do Carro do Cliente 2: 
+Tipo do Carro do Cliente 2: 0
+#==================================================#
+
+-------------------------------------------------
+Nome do Cliente 1:  
+Número de Telefone do Cliente 1: 
+Placa do Carro do Cliente 1: 
+Tipo do Carro do Cliente 1: 0
+-------------------------------------------------
+Nome do Cliente 2:  
+Número de Telefone do Cliente 2: 
+Placa do Carro do Cliente 2: 
+Tipo do Carro do Cliente 2: 0
+#==================================================#
+
+-------------------------------------------------
+Nome do Cliente 1:  
+Número de Telefone do Cliente 1: 
+Placa do Carro do Cliente 1: 
+Tipo do Carro do Cliente 1: 0
+-------------------------------------------------
+Nome do Cliente 2:  
+Número de Telefone do Cliente 2: 
+Placa do Carro do Cliente 2: 
+Tipo do Carro do Cliente 2: 0
+#==================================================#
+
+-------------------------------------------------
+Nome do Cliente 1:  
+Número de Telefone do Cliente 1: 
+Placa do Carro do Cliente 1: 
+Tipo do Carro do Cliente 1: 0
+-------------------------------------------------
+Nome do Cliente 2:  
+Número de Telefone do Cliente 2: 
+Placa do Carro do Cliente 2: 
+Tipo do Carro do Cliente 2: 0
+#==================================================#
+
+-------------------------------------------------
+Nome do Cliente 1:  
+Número de Telefone do Cliente 1: 
+Placa do Carro do Cliente 1: 
+Tipo do Carro do Cliente 1: 0
+-------------------------------------------------
+Nome do Cliente 2:  
+Número de Telefone do Cliente 2: 
+Placa do Carro do Cliente 2: 
+Tipo do Carro do Cliente 2: 0
+#==================================================#
+
+-------------------------------------------------
+Nome do Cliente 1: Edimar Calebe Castanho 
+Número de Telefone do Cliente 1: 98271302
+Placa do Carro do Cliente 1: AOC-1212
+Tipo do Carro do Cliente 1: 2
+-------------------------------------------------
+Nome do Cliente 2: Abner Garcia Castanho 
+Número de Telefone do Cliente 2: 32460323
+Placa do Carro do Cliente 2: AOC-1313
+Tipo do Carro do Cliente 2: 1
+-------------------------------------------------
+Nome do Cliente 3: Noemi Garcia Castanho 
+Número de Telefone do Cliente 3: 96393505
+Placa do Carro do Cliente 3: AOC-1414
+Tipo do Carro do Cliente 3: 2
+-------------------------------------------------
+Nome do Cliente 4: Eliel Aparecido Fraleoni  
+Número de Telefone do Cliente 4: 32460323
+Placa do Carro do Cliente 4: AOC-1515
+Tipo do Carro do Cliente 4: 2
+-------------------------------------------------
+Nome do Cliente 5: Sara Isadora Garcia Fraleoni 
+Número de Telefone do Cliente 5: 32460323
+Placa do Carro do Cliente 5: AOC-1515
+Tipo do Carro do Cliente 5: 2
+#==================================================#
+
+-------------------------------------------------
+Nome do Cliente 1: Eliel Aparecido Fraleoni 
+Número de Telefone do Cliente 1: 96852636
+Placa do Carro do Cliente 1: AOC-1313
+Tipo do Carro do Cliente 1: 4
+-------------------------------------------------
+Nome do Cliente 2: Edimar Calebe Castanho 
+Número de Telefone do Cliente 2: 98271302
+Placa do Carro do Cliente 2: AOC-1111
+Tipo do Carro do Cliente 2: 2
+-------------------------------------------------
+Nome do Cliente 3: Noemi Garcia Castanho 
+Número de Telefone do Cliente 3: 96393505
+Placa do Carro do Cliente 3: AOC-1414
+Tipo do Carro do Cliente 3: 1
+-------------------------------------------------
+Nome do Cliente 4: Manoel Martins 
+Número de Telefone do Cliente 4: 36208250
+Placa do Carro do Cliente 4: AOC-1616
+Tipo do Carro do Cliente 4: 4
+-------------------------------------------------
+Nome do Cliente 5: Abner Garcia Castanho 
+Número de Telefone do Cliente 5: 32460323
+Placa do Carro do Cliente 5: AOC-1212
+Tipo do Carro do Cliente 5: 1
+#==================================================#

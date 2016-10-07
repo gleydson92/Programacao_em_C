@@ -1,0 +1,56 @@
+############### Oque deve ter no sistema ######################
+
+Referência:https://www.youtube.com/watch?v=ivVNNPjstcw
+
+AO INICIAR
+% Cadastros
+/*	-Categorias
+		- Novo
+			- Tipo: (Gera um Número para o Produto)(Se o produto já exixtir, Cancela a operação e retorna a mensagem)
+		- Excluir
+		- Sair
+*/
+	-Produtos
+		- Novo
+			- Categoria
+			- Tipo: (Selecionável pelo cadastro anterior)
+			- Descrição do Produto
+			- Código de barras
+			- Quantidade
+			//- Valor compra unidade
+			- Valor de venda Unidade
+			- Valor Lucro ( Calculada automaticamente )
+			//- Valor total estoque preço de compra
+			- Valor total estoque preço de venda
+		- Excluir
+			- (Lista produtos cadastrados)
+		- Sair
+	-Iniciar Caixa
+		- Valor para se iniciar o caixa
+	-Sair
+% Alterar Excluir Cadastros
+	- Categorias
+		- ( Pesquisa categorias )
+			- Categoria com o nome igual ou semelhante
+			- Após listar pode-se alterar ou excluir
+	- Produtos
+		* Pesquisa por:
+		- Código de Varras
+		- Nome da Categoria
+	 	- Descrição do Produto
+			* Ao localizar, Seleciona o que quer alterar
+			- Tipo
+			- Código de Barras
+			- Quantidade
+			- Descrição do Produto
+			- Valor preço de Compra
+			- Valor preço de venda
+			- Total estoque preço de Compra
+			- Total Estoque preço de Venda
+			- Valor Lucro
+	- Voltar
+	- Sair
+% Formulário de Vendas
+	- Vendas
+% Fechamento do Caixa
+	- Fechamento do Caixa

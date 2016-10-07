@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name ATMEGA328P-PU)(type Legacy)(uri /home/calebe94/Kicad/Library/ATMEGA328/ATMEGA328P-PU.mod)(options "")(descr ""))
+  (lib (name CD40106BE)(type Legacy)(uri /home/calebe94/Kicad/Library/CD40106B/CD40106BE.mod)(options "")(descr ""))
+)

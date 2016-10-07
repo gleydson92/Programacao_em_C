@@ -1,0 +1,11 @@
+Item:0	Nome do Produto: Macarrão 	Código de Barra: 8441	Descrição: Pacote de Macarrão 500g
+Item:1	Nome do Produto: Macarrão Instantâneo	Código de Barra: 8532	Descrição: Miojo Nissin 120g
+Item:2	Nome do Produto: Posta Vermelha 	Código de Barra: 1670	Descrição: Carne Vermelha
+Item:3	Nome do Produto: Refrigerante	Código de Barra: 3745	Descrição: Bebida Gaseificada 2l
+Item:0	Nome do Produto: Ervilha 	Código de Barra: 1317	Descrição: Lata de Ervilha 
+Item:1	Nome do Produto: Milho	Código de Barra: 4830	Descrição: Lata de Milho 
+Item:2	Nome do Produto: Posta Vermelha	Código de Barra: 10882	Descrição: Carne Vermelha 
+Item:0	Nome do Produto: Macarrão	Código de Barra: 5446	Descrição: Macarrão Parafuso 500g
+Item:1	Nome do Produto: Miojo	Código de Barra: 9683	Descrição: Macarrão Instantâneo Nissin 120g
+Item:2	Nome do Produto: Salgadinho	Código de Barra: 7434	Descrição: Cheetos Bola 55g
+Item:3	Nome do Produto: Vina	Código de Barra: 4496	Descrição: Salsicha
