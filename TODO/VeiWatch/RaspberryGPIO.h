@@ -22,6 +22,10 @@
 					GPIO 26 [37] [38] GPIO 20 / MOSI
 		    			GND [39] [40] GPIO 21 / SCLK
 */
+#ifndef __RASPBERRYGPIO_H__
+#define __RASPBERRYGPIO_H__
+#endif
+
 #include<sys/stat.h>
 #include<sys/types.h>
 #include<fcntl.h>

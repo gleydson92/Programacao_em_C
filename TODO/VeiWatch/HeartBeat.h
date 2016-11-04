@@ -1,3 +1,6 @@
+#ifndef __HEARTBEAT_H__
+#define __HEARTBEAT_H__
+#endif
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdint.h>
