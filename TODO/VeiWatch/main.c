@@ -18,7 +18,8 @@
 #include<stdio.h>
 #include"wiringSerial.h"
 #include"RaspberryGPIO.h"
-#include"RPiNOKIA.h"
+//#include"RPiNOKIA.h"
+#include"PCD8544.h"
 #include"HeartBeat.h"
 //#include"PCD8544.h"
 //#include"Logo.h"
@@ -40,8 +41,17 @@ struct Data{
 	unsigned int BPM;
 	float Temp;
 }Sensors;
+int lcdDisplaySensors(){
+	char Nokia_Temp[30],Nokia_BPM[30];
+	snprintf(Nokia_Temp,30,"%.1f*C",Sensors.Temp);
+	snprintf(Nokia_BPM,30,"%dBPM",Sensors.BPM);
+	LCDclear();
+	LCDdrawstring(15,0,"SENSORES");
+	LCDdrawstring(20,2,Nokia_Temp);
+	LCDdrawstring(20,4,Nokia_BPM);
+}
 
-int displaySensors(int fd){
+/*int displaySensors(int fd){
 	char Nokia_Temp[30],Nokia_BPM[30];
 	snprintf(Nokia_Temp,30,"%.1f*C",Sensors.Temp);
 	snprintf(Nokia_BPM,30,"%dBPM",Sensors.BPM);
@@ -51,7 +61,7 @@ int displaySensors(int fd){
 	NOKIAMove(fd,15,0);	NOKIAString(fd,"SENSORES");
 	NOKIAMove(fd,20,2);	NOKIAString(fd,Nokia_Temp);
 	NOKIAMove(fd,20,4);	NOKIAString(fd,Nokia_BPM);
-}
+}*/
 const unsigned char SERIAL_PORT[2][30] = {"/dev/ttyAMA0","/dev/ttyUSB0"};
 
 const unsigned int BAUDS[2] = {115200,9600};
@@ -75,18 +85,21 @@ int main(void){
 		printf("Houve um erro ao Abrir a porta Serial!\n");
 		return -1;
 	}
-	int lcd_NOKIA = NOKIAInit(CE,RST,DC,DIN,CLK);
+	uint8_t contrast = 50;
+	LCDInit(CLK, DIN, DC, CE,RST, contrast);
+	/*int lcd_NOKIA = NOKIAInit(CE,RST,DC,DIN,CLK);
 	if(lcd_NOKIA == -1){
 		printf("Houve um erro ao Abrir a porta Serial!\n");
 		return -1;
-	}
+	}*/
 	//displaySensors(lcd_NOKIA);
 	serialFlush(raspDuino);
 	while(1){
 		if(serialDataAvail(raspDuino)!=-1){
 			Sensors.BPM = (unsigned int)serialGetchar(raspDuino);
 			Sensors.Temp = ((float)serialGetchar(raspDuino)*5/(1023))/0.01;
-			displaySensors(lcd_NOKIA);
+			//displaySensors(lcd_NOKIA);
+			lcdDisplaySensors();
 		}
 	}
 }
