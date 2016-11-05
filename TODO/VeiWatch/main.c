@@ -33,9 +33,22 @@ int dislpaySensors(int fd){
 }
 const unsigned char SERIAL_PORT[2][30] = {"/dev/ttyAMA0","/dev/ttyUSB0"};
 
-
 const unsigned int BAUDS[2] = {115200,9600};
+
 int main(void){
+	/*Iniciar o Display antes, para ficar mostrando o logo da Raspberry enquanto é feito o cadastro */
+	/*E utilizar a Biblioteca PCD8544 ao inves de RPiNOKIA*/
+	system("clear");
+	printf("Deseja Sobrescrever os Dados ? S/N\n");
+	int choose;
+	do{choose = (int)getchar();}while(choose != 115 && choose != 83 && choose != 110 && choose != 78);
+	if(choose == 115 || choose == 83){
+		printf("Cadastro:\n");getchar();
+		//cadastro();
+	}else{
+		printf("Inicia Programa!\n");getchar();
+		system("clear");
+	}
 	int raspDuino = serialOpen(SERIAL_PORT[1],BAUDS[1]);
 	if(raspDuino == -1){
 		printf("Houve um erro ao Abrir a porta Serial!\n");
@@ -49,10 +62,9 @@ int main(void){
 	serialFlush(raspDuino);
 	while(1){
 		if(serialDataAvail(raspDuino)!=-1){
-			//printf("BPM:%d\n",(unsigned int)serialGetchar(raspDuino));
 			Sensors.BPM = (unsigned int)serialGetchar(raspDuino);
 			Sensors.Temp = ((float)serialGetchar(raspDuino)*5/(1023))/0.01;
-			//printf("Temperatura:%f\n",((float)serialGetchar(raspDuino)*5/(1023))/0.01);
+			displaySensors(lcd_NOKIA);
 		}
 	}
 }

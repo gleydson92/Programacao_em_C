@@ -6,7 +6,7 @@
 #include <string.h>
 #include <sys/sysinfo.h>
 #include "PCD8544.h"
-
+#include "Logo.h"
 // pin setup
 int _din = 24;
 int _sclk = 23;
@@ -33,7 +33,7 @@ int main (void)
   LCDshowLogo();
   
   delay_ms(2000);
-	LCDshowSensors();
+	LCDDrawBitmap(sensors_logo);
 	  delay_ms(2000);
 	
 }

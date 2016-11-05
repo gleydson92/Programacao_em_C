@@ -7,6 +7,7 @@
 #include"RPiNOKIA.h"
 #include"pinDefine.h"
 #include"HeartBeat.h"
-
+#include"PCD8544.h"
+#include"Logo.h"
 char *isNormal(float Temp);
 

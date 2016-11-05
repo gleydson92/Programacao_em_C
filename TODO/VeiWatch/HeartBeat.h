@@ -35,6 +35,7 @@ struct sGENERAL{
 	uint8_t BelowAverage;
 	uint8_t Bad;
 	char *Sex;
+	char Name[100];
 	uint8_t AgeGroup;
 };
 
