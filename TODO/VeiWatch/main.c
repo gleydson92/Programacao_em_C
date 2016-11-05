@@ -43,12 +43,14 @@ struct Data{
 
 int displaySensors(int fd){
 	char Nokia_Temp[30],Nokia_BPM[30];
-	snprintf(Nokia_Temp,30,"%.2f°C",Sensors.Temp);
-	snprintf(Nokia_Temp,30,"%dBPM",Sensors.BPM);
+	snprintf(Nokia_Temp,30,"%.1f*C",Sensors.Temp);
+	snprintf(Nokia_BPM,30,"%dBPM",Sensors.BPM);
 	NOKIAClear(fd);	delay_ms(50);
-	NOKIAMove(fd,30,0);	NOKIAString(fd,"SENSORES");
-	NOKIAMove(fd,0,1);	NOKIAString(fd,Nokia_Temp);
-	NOKIAMove(fd,0,3);	NOKIAString(fd,Nokia_BPM);
+	printf("Temp:%.1f\n",Sensors.Temp);
+	printf("BPM:%d\n",Sensors.BPM);
+	NOKIAMove(fd,15,0);	NOKIAString(fd,"SENSORES");
+	NOKIAMove(fd,20,2);	NOKIAString(fd,Nokia_Temp);
+	NOKIAMove(fd,20,4);	NOKIAString(fd,Nokia_BPM);
 }
 const unsigned char SERIAL_PORT[2][30] = {"/dev/ttyAMA0","/dev/ttyUSB0"};
 
@@ -78,9 +80,9 @@ int main(void){
 		printf("Houve um erro ao Abrir a porta Serial!\n");
 		return -1;
 	}
+	//displaySensors(lcd_NOKIA);
 	serialFlush(raspDuino);
 	while(1){
-		displaySensors(lcd_NOKIA);
 		if(serialDataAvail(raspDuino)!=-1){
 			Sensors.BPM = (unsigned int)serialGetchar(raspDuino);
 			Sensors.Temp = ((float)serialGetchar(raspDuino)*5/(1023))/0.01;
