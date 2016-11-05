@@ -15,14 +15,33 @@
  			 SCLK / GPIO 11 [23] [24] GPIO  8 / CE0#	CE_NOKIA
 					    GND [25] [26] GPIO  7 / CE1#	RST_NOKIA
 */
-#include"VeiWatch.h"
+#include<stdio.h>
+#include"wiringSerial.h"
+#include"RaspberryGPIO.h"
+#include"RPiNOKIA.h"
+#include"HeartBeat.h"
+//#include"PCD8544.h"
+//#include"Logo.h"
+
+//#include"VeiWatch.h"
+//#include"wiringSerial.h"
+/*Display NOKIA*/
+#define RST 7
+#define CE 8
+#define DC 25
+#define DIN 24
+#define CLK 23
+
+/*Buttons*/
+#define backLight	17
+#define changeDisplay 27
 
 struct Data{
 	unsigned int BPM;
 	float Temp;
 }Sensors;
 
-int dislpaySensors(int fd){
+int displaySensors(int fd){
 	char Nokia_Temp[30],Nokia_BPM[30];
 	snprintf(Nokia_Temp,30,"%.2f°C",Sensors.Temp);
 	snprintf(Nokia_Temp,30,"%dBPM",Sensors.BPM);

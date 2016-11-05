@@ -19,9 +19,7 @@
  *    along with wiringPi.  If not, see <http://www.gnu.org/licenses/>.
  ***********************************************************************
  */
-#ifndef __WIRINGSERIAL_H__
-#define __WIRINGSERIAL_H__
-#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif

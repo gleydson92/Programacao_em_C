@@ -1,5 +1,4 @@
 #include"HeartBeat.h"
-#include"RaspberryGPIO.h"
 #define NSAMPLES 10
 char sReport[8][15]={"LOW PULSE!!!","Excellent!","Very Good!","Good!","Above Average!","Average!","Below Average!","TOO HIGH!!!"};
 
