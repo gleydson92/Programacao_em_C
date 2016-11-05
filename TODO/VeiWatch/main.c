@@ -57,7 +57,7 @@ const unsigned int BAUDS[2] = {115200,9600};
 int main(void){
 	/*Iniciar o Display antes, para ficar mostrando o logo da Raspberry enquanto é feito o cadastro */
 	/*E utilizar a Biblioteca PCD8544 ao inves de RPiNOKIA*/
-	system("clear");
+	/*system("clear");
 	printf("Deseja Sobrescrever os Dados ? S/N\n");
 	int choose;
 	do{choose = (int)getchar();}while(choose != 115 && choose != 83 && choose != 110 && choose != 78);
@@ -67,19 +67,20 @@ int main(void){
 	}else{
 		printf("Inicia Programa!\n");getchar();
 		system("clear");
-	}
+	}*/
 	int raspDuino = serialOpen(SERIAL_PORT[1],BAUDS[1]);
 	if(raspDuino == -1){
 		printf("Houve um erro ao Abrir a porta Serial!\n");
 		return -1;
 	}
-	int lcd_NOKIA = NOKIAInit(RST,CE,DC,DIN,CLK);
+	int lcd_NOKIA = NOKIAInit(CE,RST,DC,DIN,CLK);
 	if(lcd_NOKIA == -1){
 		printf("Houve um erro ao Abrir a porta Serial!\n");
 		return -1;
 	}
 	serialFlush(raspDuino);
 	while(1){
+		displaySensors(lcd_NOKIA);
 		if(serialDataAvail(raspDuino)!=-1){
 			Sensors.BPM = (unsigned int)serialGetchar(raspDuino);
 			Sensors.Temp = ((float)serialGetchar(raspDuino)*5/(1023))/0.01;
