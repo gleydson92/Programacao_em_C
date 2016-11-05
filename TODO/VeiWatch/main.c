@@ -41,14 +41,23 @@ struct Data{
 	unsigned int BPM;
 	float Temp;
 }Sensors;
+
+	unsigned int contrast = 0;
 int lcdDisplaySensors(){
 	char Nokia_Temp[30],Nokia_BPM[30];
 	snprintf(Nokia_Temp,30,"%.1f*C",Sensors.Temp);
 	snprintf(Nokia_BPM,30,"%dBPM",Sensors.BPM);
 	LCDclear();
-	LCDdrawstring(15,0,"SENSORES");
-	LCDdrawstring(20,2,Nokia_Temp);
-	LCDdrawstring(20,4,Nokia_BPM);
+	printf("Temp:%.1f\n",Sensors.Temp);
+	printf("BPM:%d\n",Sensors.BPM);
+	LCDdrawstring(20,0,"SENSORES");
+	LCDdrawstring(25,10,Nokia_Temp);
+	LCDdrawstring(25,30,Nokia_BPM);
+	
+	contrast = contrast + 50;
+	LCDsetContrast(contrast);
+
+	LCDdisplay();
 }
 
 /*int displaySensors(int fd){
@@ -85,8 +94,8 @@ int main(void){
 		printf("Houve um erro ao Abrir a porta Serial!\n");
 		return -1;
 	}
-	uint8_t contrast = 50;
 	LCDInit(CLK, DIN, DC, CE,RST, contrast);
+	//LCDInit(_sclk, _din, _dc, _cs, _rst, contrast);
 	/*int lcd_NOKIA = NOKIAInit(CE,RST,DC,DIN,CLK);
 	if(lcd_NOKIA == -1){
 		printf("Houve um erro ao Abrir a porta Serial!\n");

@@ -33,7 +33,7 @@ int main (void)
   LCDshowLogo();
   
   delay_ms(2000);
-	LCDDrawBitmap(sensors_logo);
+	SLCDDrawBitmap(main_display);
 	  delay_ms(2000);
 	
 }

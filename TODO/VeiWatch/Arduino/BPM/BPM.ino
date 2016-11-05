@@ -53,6 +53,6 @@ void loop() {
     Serial.write(0);
     Serial.flush();
     Serial.write(0);
-    Data_Sended == true;
+    Data_Sended = true;
   }
 }
