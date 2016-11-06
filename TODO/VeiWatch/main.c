@@ -18,14 +18,12 @@
 #include<stdio.h>
 #include"wiringSerial.h"
 #include"RaspberryGPIO.h"
-//#include"RPiNOKIA.h"
 #include"PCD8544.h"
 #include"HeartBeat.h"
-//#include"PCD8544.h"
-//#include"Logo.h"
+#include"Logo.h"
 
-//#include"VeiWatch.h"
-//#include"wiringSerial.h"
+#include"VeiWatch.h"
+
 /*Display NOKIA*/
 #define RST 7
 #define CE 8
@@ -42,8 +40,8 @@ struct Data{
 	float Temp;
 }Sensors;
 
-	unsigned int contrast = 0;
-int lcdDisplaySensors(){
+#define contrast 50
+int lcdDisplaySensors(char *state_BPM, char *state_Temp){
 	char Nokia_Temp[30],Nokia_BPM[30];
 	snprintf(Nokia_Temp,30,"%.1f*C",Sensors.Temp);
 	snprintf(Nokia_BPM,30,"%dBPM",Sensors.BPM);
@@ -52,25 +50,13 @@ int lcdDisplaySensors(){
 	printf("BPM:%d\n",Sensors.BPM);
 	LCDdrawstring(20,0,"SENSORES");
 	LCDdrawstring(25,10,Nokia_Temp);
+	LCDdrawstring(20,20,state_Temp);
 	LCDdrawstring(25,30,Nokia_BPM);
-	
-	contrast = contrast + 50;
-	LCDsetContrast(contrast);
+	LCDdrawstring(20,40,state_BPM);
 
 	LCDdisplay();
 }
 
-/*int displaySensors(int fd){
-	char Nokia_Temp[30],Nokia_BPM[30];
-	snprintf(Nokia_Temp,30,"%.1f*C",Sensors.Temp);
-	snprintf(Nokia_BPM,30,"%dBPM",Sensors.BPM);
-	NOKIAClear(fd);	delay_ms(50);
-	printf("Temp:%.1f\n",Sensors.Temp);
-	printf("BPM:%d\n",Sensors.BPM);
-	NOKIAMove(fd,15,0);	NOKIAString(fd,"SENSORES");
-	NOKIAMove(fd,20,2);	NOKIAString(fd,Nokia_Temp);
-	NOKIAMove(fd,20,4);	NOKIAString(fd,Nokia_BPM);
-}*/
 const unsigned char SERIAL_PORT[2][30] = {"/dev/ttyAMA0","/dev/ttyUSB0"};
 
 const unsigned int BAUDS[2] = {115200,9600};
@@ -95,20 +81,16 @@ int main(void){
 		return -1;
 	}
 	LCDInit(CLK, DIN, DC, CE,RST, contrast);
-	//LCDInit(_sclk, _din, _dc, _cs, _rst, contrast);
-	/*int lcd_NOKIA = NOKIAInit(CE,RST,DC,DIN,CLK);
-	if(lcd_NOKIA == -1){
-		printf("Houve um erro ao Abrir a porta Serial!\n");
-		return -1;
-	}*/
-	//displaySensors(lcd_NOKIA);
+	struct sGENERAL person;
+	if(healthInit(0,1,&person)==false)	printf("No data in BPM!\n");
 	serialFlush(raspDuino);
 	while(1){
+		
 		if(serialDataAvail(raspDuino)!=-1){
 			Sensors.BPM = (unsigned int)serialGetchar(raspDuino);
 			Sensors.Temp = ((float)serialGetchar(raspDuino)*5/(1023))/0.01;
 			//displaySensors(lcd_NOKIA);
-			lcdDisplaySensors();
+			lcdDisplaySensors(healthState(person,Sensors.BPM),isNormal(Sensors.Temp));
 		}
 	}
 }
