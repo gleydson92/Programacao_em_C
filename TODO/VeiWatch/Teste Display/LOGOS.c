@@ -24,7 +24,9 @@ int main (void)
   printf("========================================\n");
   
   // check wiringPi setup
-  
+  GPIOExport(18);
+	GPIODirection(18,OUTPUT);
+	GPIOWrite(18,HIGH);
   // init and clear lcd
   LCDInit(_sclk, _din, _dc, _cs, _rst, contrast);
   LCDclear();
@@ -35,5 +37,13 @@ int main (void)
   delay_ms(2000);
 	SLCDDrawBitmap(main_display);
 	  delay_ms(2000);
-	
+	getchar();
+	GPIOWrite(18,LOW);	
+	GPIOUnexport(18);
+	GPIOUnexport(_sclk);
+	GPIOUnexport(_din);
+	GPIOUnexport(_dc);
+
+	GPIOUnexport(_cs);
+	GPIOUnexport(_rst);
 }

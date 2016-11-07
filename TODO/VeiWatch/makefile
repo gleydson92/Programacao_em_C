@@ -1,3 +1,3 @@
-all: main.c RaspberryGPIO.c RPiNOKIA.c wirigSerial.c
-	gcc main.c RaspberryGPIO.c RPiNOKIA.c wiringSerial.c -o exec
+all: main.c RaspberryGPIO.c wiringSerial.c PCD8544.c HeartBeat.c VeiWatch.c
+	gcc -std=c99 main.c RaspberryGPIO.c wiringSerial.c PCD8544.c HeartBeat.c VeiWatch.c -o exec
 
