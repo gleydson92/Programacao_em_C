@@ -35,14 +35,13 @@ struct sGENERAL{
 	uint8_t BelowAverage;
 	uint8_t Bad;
 	char *Sex;
-	char Name[100];
+	char Name[150];
 	uint8_t AgeGroup;
 };
-
+bool healthProfile(struct sGENERAL *patient);
 unsigned long getTime(void);
 bool healthInit(uint8_t iSex,uint8_t iAgeGroup,struct sGENERAL *patient);
 char* healthState(struct sGENERAL person,unsigned int pulse);
-int extractData();
-void healthExit(); // Will ends the programm and extract to a file the currently patient's data 
-void healthReset_data();//Will flush the file that saves the currently patient's data
-
+//void healthExit(); // Will ends the programm and extract to a file the currently patient's data 
+//void healthReset_data();//Will flush the file that saves the currently patient's data
+bool importData(struct sGENERAL *patient);

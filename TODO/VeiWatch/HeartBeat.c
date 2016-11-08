@@ -1,5 +1,6 @@
 #include"HeartBeat.h"
 #include"RaspberryGPIO.h"
+#include<string.h>
 #define NSAMPLES 10
 char sReport[8][15]={"LOW PULSE!!!","Excellent!","Very Good!","Good!","Above Average!","Average!","Below Average!","TOO HIGH!!!"};
 
@@ -9,6 +10,28 @@ unsigned long getTime(void){
 	gettimeofday(&time,NULL);
 	unsigned long long t = (1000*time.tv_sec)+(time.tv_usec/1000);
 	return t;
+}
+bool healthProfile(struct sGENERAL *patient){
+	system("clear");
+	printf("\tCadastro:\n");
+	char name[150];
+	unsigned int age=0,sex = 0;
+	printf("Nome:");
+	scanf("%[^\n]s",name);
+	strcpy(patient->Name,name);
+	printf("\nIdade:");
+	scanf("%d",&age);
+	printf("\nGênero [1]Masculino-[2]Feminino:");
+	do{scanf("%d",&sex);}while(sex > -1 && sex < 2);
+
+	if(healthInit(sex,age,patient) == false) return false;
+
+	FILE *patient_data = fopen("patient_data.bin","w+"); // Verificar Parâmetro
+	if(patient_data == NULL){
+		printf("File doesn't open!\n");
+		return false;
+	}
+	fwrite(patient,sizeof(struct sGENERAL),1,patient_data);
 }
 bool healthInit(uint8_t iSex,uint8_t iAgeGroup,struct sGENERAL *patient){
 	if(iSex == MALE){
@@ -81,5 +104,17 @@ unsigned int healthPulse(uint8_t pin){
 	}
 	return 60000/(pulse/(NSAMPLES-1));
 }
-int extractData();
-
+bool importData(struct sGENERAL *patient){
+	FILE *data = fopen("patient_data.bin","r");
+	if(data == NULL){
+		printf("There is no file(or data)!\n");
+		return false;
+	}
+	uint8_t count=0;
+	//while(!feof(data)){
+		fread(patient,sizeof(struct sGENERAL),1,data);
+		//count ++;
+	//}
+	if(count > 1)	return false;
+	else	return true;
+}

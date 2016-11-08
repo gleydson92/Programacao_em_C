@@ -34,18 +34,29 @@
 /*Buttons*/
 #define backLight	17
 #define changeDisplay 27
-
+/*Output GPIO*/
+#define BL 18
 struct Data{
 	unsigned int BPM;
 	float Temp;
+	char *BPMState,*TempState;
+	
 }Sensors;
 
 #define contrast 50
+void lcdDisplayMain(){
+
+}
+void lcdDisplayProfile(){
+
+}
 int lcdDisplaySensors(char *state_BPM, char *state_Temp){
 	char Nokia_Temp[30],Nokia_BPM[30];
 	snprintf(Nokia_Temp,30,"%.1f*C",Sensors.Temp);
 	snprintf(Nokia_BPM,30,"%dBPM",Sensors.BPM);
+
 	LCDclear();
+
 	printf("Temp:%.1f\n",Sensors.Temp);
 	printf("BPM:%d\n",Sensors.BPM);
 	LCDdrawstring(20,0,"SENSORES");
@@ -56,41 +67,77 @@ int lcdDisplaySensors(char *state_BPM, char *state_Temp){
 
 	LCDdisplay();
 }
-
 const unsigned char SERIAL_PORT[2][30] = {"/dev/ttyAMA0","/dev/ttyUSB0"};
 
 const unsigned int BAUDS[2] = {115200,9600};
 
 int main(void){
-	/*Iniciar o Display antes, para ficar mostrando o logo da Raspberry enquanto é feito o cadastro */
-	/*E utilizar a Biblioteca PCD8544 ao inves de RPiNOKIA*/
-	/*system("clear");
+	LCDInit(CLK, DIN, DC, CE,RST, contrast);
+	LCDshowLogo();
+	struct sGENERAL person;
+	delay_ms(1000);
+
+	system("clear");
 	printf("Deseja Sobrescrever os Dados ? S/N\n");
 	int choose;
 	do{choose = (int)getchar();}while(choose != 115 && choose != 83 && choose != 110 && choose != 78);
+	getchar();
 	if(choose == 115 || choose == 83){
-		printf("Cadastro:\n");getchar();
-		//cadastro();
+		LCDDrawBitmap(profile);
+		if(healthProfile(&person) == false){
+			printf("Falha ao realizar o Cadastro!\n");
+			return -1;
+		}
 	}else{
-		printf("Inicia Programa!\n");getchar();
 		system("clear");
-	}*/
+		LCDDrawBitmap(profile);
+		if(importData(&person)==false){
+			printf("Falha ao importar dados!\n");
+			return -1;
+		}
+	}
+	LCDDrawBitmap(sensors);
 	int raspDuino = serialOpen(SERIAL_PORT[1],BAUDS[1]);
 	if(raspDuino == -1){
 		printf("Houve um erro ao Abrir a porta Serial!\n");
 		return -1;
 	}
-	LCDInit(CLK, DIN, DC, CE,RST, contrast);
-	struct sGENERAL person;
-	if(healthInit(0,1,&person)==false)	printf("No data in BPM!\n");
+
 	serialFlush(raspDuino);
+	
+	GPIOExport(changeDisplay);	GPIODirection(changeDisplay,INPUT);
+	GPIOExport(backLight);	GPIODirection(backLight,INPUT);
+	GPIOExport(BL);	GPIODirection(BL,OUTPUT);
+
+	uint8_t change_Layer = 0;
+	uint8_t light_State = LOW;
+
 	while(1){
-		
-		if(serialDataAvail(raspDuino)!=-1){
+		if(GPIORead(changeDisplay) == HIGH){
+			while(GPIORead(changeDisplay) == HIGH){}
+			change_Layer++;
+			if(change_Layer > 2)	change_Layer = 0;
+		}
+		if(GPIORead(backLight) == HIGH){
+			while(GPIORead(backLight) == HIGH){}
+			light_State = ! light_State;
+			GPIOWrite(BL,light_State);
+		}
+		switch(change_Layer){
+			case 0:
+				lcdDisplayMain();
+				break;
+			case 1:
+				lcdDisplayProfile();
+				break;
+			case 2:
+				lcdDisplaySensors(Sensors.BPMState,Sensors.TempState);
+		}
+		if(serialDataAvail(raspDuino)!=-1){ // Usar Threads 
 			Sensors.BPM = (unsigned int)serialGetchar(raspDuino);
 			Sensors.Temp = ((float)serialGetchar(raspDuino)*5/(1023))/0.01;
-			//displaySensors(lcd_NOKIA);
-			lcdDisplaySensors(healthState(person,Sensors.BPM),isNormal(Sensors.Temp));
+			Sensors.BPMState = healthState(person,Sensors.BPM);
+			Sensors.TempState = isNormal(Sensors.Temp);
 		}
 	}
 }
