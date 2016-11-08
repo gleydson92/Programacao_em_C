@@ -22,9 +22,11 @@
 #include"HeartBeat.h"
 #include"Logo.h"
 
+#include"SystemClock.h"
 #include"VeiWatch.h"
 
 /*Display NOKIA*/
+
 #define RST 7
 #define CE 8
 #define DC 25
@@ -44,16 +46,35 @@ struct Data{
 }Sensors;
 
 #define contrast 50
-void lcdDisplayMain(){
 
+void lcdDisplayMain(){
+	/* Inicialização do Relógio do Sistema	*/
+	char	data_sistema[30],hora_sistema[10], Nokia_Temp[10],Nokia_BPM[10];;
+	sprintf(data_sistema,"%s",data());
+	sprintf(hora_sistema,"%s",hora());
+	snprintf(Nokia_Temp,10,"%.1f*C",Sensors.Temp);
+	snprintf(Nokia_BPM,10,"%dBPM",Sensors.BPM);	
+
+	LCDclear();
+	
+	printf("Data:%s\n",data_sistema);
+	printf("Hora:%s\n",hora_sistema);
+	printf("Temp:%.1f\n",Sensors.Temp);
+	printf("BPM:%d\n",Sensors.BPM);
+
+	LCDdrawstring(20,0,"PRINCIPAL");
+	LCDdrawstring(0,10,Nokia_Temp);
+	LCDdrawstring(25,10,Nokia_BPM);
+
+	LCDdisplay();
 }
 void lcdDisplayProfile(){
 
 }
 int lcdDisplaySensors(char *state_BPM, char *state_Temp){
-	char Nokia_Temp[30],Nokia_BPM[30];
-	snprintf(Nokia_Temp,30,"%.1f*C",Sensors.Temp);
-	snprintf(Nokia_BPM,30,"%dBPM",Sensors.BPM);
+	char Nokia_Temp[10],Nokia_BPM[10];
+	snprintf(Nokia_Temp,"%.1f*C",Sensors.Temp);
+	snprintf(Nokia_BPM,"%dBPM",Sensors.BPM);
 
 	LCDclear();
 
@@ -73,6 +94,8 @@ const unsigned int BAUDS[2] = {115200,9600};
 
 int main(void){
 	LCDInit(CLK, DIN, DC, CE,RST, contrast);
+  //LCDInit(_sclk, _din, _dc, _cs, _rst, contrast);
+  	LCDclear();
 	LCDshowLogo();
 	struct sGENERAL person;
 	delay_ms(1000);

@@ -23,7 +23,8 @@ bool healthProfile(struct sGENERAL *patient){
 	scanf("%d",&age);
 	printf("\nGênero [1]Masculino-[2]Feminino:");
 	do{scanf("%d",&sex);}while(sex > -1 && sex < 2);
-
+	getchar();
+	system("clear");
 	if(healthInit(sex,age,patient) == false) return false;
 
 	FILE *patient_data = fopen("patient_data.bin","w+"); // Verificar Parâmetro
@@ -32,6 +33,10 @@ bool healthProfile(struct sGENERAL *patient){
 		return false;
 	}
 	fwrite(patient,sizeof(struct sGENERAL),1,patient_data);
+	printf("\n\n\tCadastro Realizado com Sucesso !\n");
+	getchar();
+	system("clear");
+	return true;
 }
 bool healthInit(uint8_t iSex,uint8_t iAgeGroup,struct sGENERAL *patient){
 	if(iSex == MALE){

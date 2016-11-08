@@ -35,7 +35,7 @@ int main (void)
   LCDshowLogo();
   
   delay_ms(2000);
-	SLCDDrawBitmap(main_display);
+	LCDDrawBitmap(main_display);
 	  delay_ms(2000);
 	getchar();
 	GPIOWrite(18,LOW);	
