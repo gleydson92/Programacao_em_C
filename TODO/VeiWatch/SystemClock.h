@@ -1,80 +1,58 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
-char *format(int number){		
-	char 	*retorno,ret[100];
-	int 	i;
+struct sClock{
+	char time[10],date[10];
+	unsigned int day,month,hour,minute;
+}info;
 
-	if (number < 10){
-		sprintf(ret,"0%d",number);
-		retorno = ret;
-		return retorno;
-	}
-	else{
-		sprintf(ret,"%d",number);
-		retorno = ret;
-		return retorno;
-	}
-}		
-char *data(void){
+void getClockInformation(struct sClock *times){
 
-	int dia,mes,ano;
-	char	
-		var1[100],
-		var2[100],
-		var3[100],
-		var4[100],
-		*dataPtr;
+	unsigned int iDay,iMonth,iHour,iMinute;
+	char data[10],day[5],month[5],timetable[10],hour[5],minute[5];
+	
 	struct tm *local;
 	time_t t;
-
 	t = time(NULL);
+
 	local = localtime(&t);
-
-	dia = local -> tm_mday;
-	mes = local -> tm_mon + 1;
-	ano = local -> tm_year + 1900;
-
-	sprintf(var1,"%s",format(dia));
-	sprintf(var2,"%s",format(mes));
-	sprintf(var3,"%s",format(ano));
-
-	sprintf(var4,"%s/%s",var1,var2);
-
-	dataPtr = var4;
-	return dataPtr;
-}
-
-char *hora(void){
-		
-	int	hora,minuto,segundo;
-	char	
-		var1[100],
-		var2[100],
-		var3[100],
-		var5[100],
-		*retorno;
-	struct tm *local;
-	time_t t;
-
-	t = time(NULL);
-	local = localtime(&t);
-		
-	// obtem hora, minuto e segundo e os aloca em uma variavel do tipo inteiro
-	hora	=	local -> tm_hour;
-	minuto	= 	local -> tm_min;
-	segundo =	local -> tm_sec;
 	
-	// por algum motivo precisa converter os valores retornados pelos ponteiros
-	// da funcao em variaveis do tipo char
-	sprintf(var1,"%s",format(hora));
-	sprintf(var2,"%s",format(minuto));
-	sprintf(var3,"%s",format(segundo));
-	
-	// cria a variavel de retorno dos dados e cria um ponteiro para essa variavel
-	sprintf(var5,"%s:%s",var1,var2);
-	
-	// retorna hora no formato hh:mm:ss com um ponteiro
-	retorno = var5;
-	return retorno;	
+	iDay = local->tm_mday;
+	iMonth = local -> tm_mon + 1;
+
+	iHour	=	local -> tm_hour;
+	iMinute	= 	local -> tm_min;
+
+	times -> day = iDay;
+	times -> month = iMonth;
+	times -> hour = iHour;
+	times -> minute = iMinute;
+
+	if(iDay < 10){
+		snprintf(day,5,"0%d",iDay);
+	}else{
+		snprintf(day,5,"%d",iDay);
+	}
+	if(iMonth < 10){
+		snprintf(month,5,"0%d",iMonth);	
+	}else{
+		snprintf(month,5,"%d",iMonth);	
+	}
+
+	if(iHour < 10){
+		snprintf(hour,5,"0%d",iHour);
+	}else{
+		snprintf(hour,5,"%d",iHour);
+	}
+	if(iMinute < 10){
+		snprintf(minute,5,"0%d",iMinute);	
+	}else{
+		snprintf(minute,5,"%d",iMinute);	
+	}
+
+	sprintf(data,"%s/%s",day,month);
+	sprintf(timetable,"%s:%s",hour,minute);
+
+	strcpy(times->time,timetable);
+	strcpy(times->date,data);
 }

@@ -16,25 +16,24 @@ struct Data{
 #define contrast 50 	
 void lcdDisplayMain(){
 	/* Inicialização do Relógio do Sistema	*/
-	char	data_sistema[100],hora_sistema[10], Nokia_Temp[10],Nokia_BPM[10];
-	sprintf(data_sistema,"%s",data());
-	sprintf(hora_sistema,"%s",hora());
+	char	Nokia_Temp[10],Nokia_BPM[10];;	
 	snprintf(Nokia_Temp,10,"%.1f*C",Sensors.Temp);
 	snprintf(Nokia_BPM,10,"%dBPM",Sensors.BPM);	
 
 	LCDclear();
-	
-	printf("Data:%s\n",data_sistema);
-	printf("Hora:%s\n",hora_sistema);
+
+	getClockInformation(&info);
+
+	printf("Data:%s\n",info.date);
+	printf("Hora:%s\n",info.time);
 	printf("Temp:%.1f\n",Sensors.Temp);
 	printf("BPM:%d\n",Sensors.BPM);
 
 	LCDdrawstring(20,0,"PRINCIPAL");
-	LCDdrawline(0, 10, 83, 10, BLACK);
-	LCDdrawstring(0,13,Nokia_Temp);
-	LCDdrawstring(50,13,Nokia_BPM);
-	LCDdrawstring(0,26,data_sistema);
-	LCDdrawstring(50,26,hora_sistema);
+	LCDdrawstring(0,10,Nokia_Temp);
+	LCDdrawstring(25,10,Nokia_BPM);
+	LCDdrawstring(0,23,info.date);
+	LCDdrawstring(25,23,info.time);
 
 	LCDdisplay();
 }
@@ -57,7 +56,7 @@ int main(void){
 	Sensors.BPMState = healthState(patient,Sensors.BPM);
 	Sensors.TempState = isNormal(Sensors.Temp);
 	
-	printf("BPM:%s\n",Sensors.BPMState);
-	printf("Temp:%s\n",Sensors.TempState);
+//	printf("BPM:%s\n",Sensors.BPMState);
+//	printf("Temp:%s\n",Sensors.TempState);
 	lcdDisplayMain();
 }
