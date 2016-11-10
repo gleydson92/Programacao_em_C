@@ -15,6 +15,19 @@ struct Data{
 #define DIN 24
 #define CLK 23
 #define contrast 50 	
+void Rollstring(char *string){
+	unsigned int lenght = strlen(string),charWrited=0;
+	//char *scrollString = (char*)malloc(sizeof(char)*lenght);
+	for(uint8_t cont = lenght; cont >= 0; cont--){
+		for(uint8_t cont1 = 0; cont1 < charWrited;cont1++){
+			LCDwriteScroll(string[cont1]);
+			charWrited++;
+			LCDdisplay();
+		}
+		LCDdisplay();
+		usleep(10000);
+	}
+}
 void lcdDisplayMain(){
 	/* Inicialização do Relógio do Sistema	*/
 	char	Nokia_Temp[10],Nokia_BPM[10],INFO[]={"INFORMACOES"};
@@ -23,7 +36,7 @@ void lcdDisplayMain(){
 	snprintf(Nokia_BPM,10,"%dBPM",Sensors.BPM);	
 
 	LCDclear();
-
+	LCDdisplay();
 	getClockInformation(&info);
 
 	printf("Data:%s\n",info.date);
@@ -38,14 +51,15 @@ void lcdDisplayMain(){
 	LCDdrawstring(50,26,info.time);
 	
 	LCDdrawline(0, 35, 83, 35, BLACK);
-	LCDsetCursor(0, 39);
+	LCDsetCursor(80, 39);
 	//LCDSet(WHITE,1);
 	// Text Scroll 
-	for(unsigned int cont = 0 ; cont < lenght ; cont ++){
-		LCDwrite(INFO[cont]);		
+	/*for(unsigned int cont = 0 ; cont < lenght ; cont ++){
+		LCDwriteScroll(INFO[cont]);		
 		LCDdisplay();
 		usleep(10000);
-	}
+	}*/
+	Rollstring(INFO);
 
 	LCDdisplay();
 }
