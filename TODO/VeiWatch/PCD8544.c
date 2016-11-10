@@ -879,3 +879,7 @@ void LCDDrawBitmap(const unsigned char *logo){
 	}
 	LCDdisplay();
 }
+void LCDSet(uint8_t color,uint8_t size){
+	textcolor = color;
+	textsize = size;
+}
