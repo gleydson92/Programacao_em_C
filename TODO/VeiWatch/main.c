@@ -49,12 +49,13 @@ struct Data{
 
 void lcdDisplayMain(){
 	/* Inicialização do Relógio do Sistema	*/
-	char	Nokia_Temp[10],Nokia_BPM[10];;	
+	char	Nokia_Temp[10],Nokia_BPM[10],INFO[]={"INFORMACOES OU ALGO DO TIPO"};
+	int lenght = strlen(INFO);
 	snprintf(Nokia_Temp,10,"%.1f*C",Sensors.Temp);
 	snprintf(Nokia_BPM,10,"%dBPM",Sensors.BPM);	
 
 	LCDclear();
-
+	LCDdisplay();
 	getClockInformation(&info);
 
 	printf("Data:%s\n",info.date);
@@ -63,13 +64,16 @@ void lcdDisplayMain(){
 	printf("BPM:%d\n",Sensors.BPM);
 
 	LCDdrawstring(20,0,"PRINCIPAL");
-	LCDdrawstring(0,10,Nokia_Temp);
-	LCDdrawstring(25,10,Nokia_BPM);
-	LCDdrawstring(0,23,info.date);
-	LCDdrawstring(25,23,info.time);
-
+	LCDdrawstring(0,13,Nokia_Temp);
+	LCDdrawstring(50,13,Nokia_BPM);
+	LCDdrawstring(0,26,info.date);
+	LCDdrawstring(50,26,info.time);
+	
+	LCDdrawline(0, 35, 83, 35, BLACK);
+	// informações
 	LCDdisplay();
 }
+
 void lcdDisplayProfile(){
 
 }

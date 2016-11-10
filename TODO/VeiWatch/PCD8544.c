@@ -897,7 +897,7 @@ void LCDwriteScroll(uint8_t c){
 	{
 		LCDdrawchar(cursor_x, cursor_y, c);
 		cursor_x -= textsize*6;
-		if (cursor_x >= (LCDWIDTH-5))
+		if (cursor_x >= (LCDWIDTH+5))
 		{
 			cursor_x = 0;
 			cursor_y-=8;

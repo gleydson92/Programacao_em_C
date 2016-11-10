@@ -36,6 +36,7 @@ struct sGENERAL{
 	uint8_t Bad;
 	char *Sex;
 	char Name[150];
+	unsigned int Age;
 	uint8_t AgeGroup;
 };
 bool healthProfile(struct sGENERAL *patient);

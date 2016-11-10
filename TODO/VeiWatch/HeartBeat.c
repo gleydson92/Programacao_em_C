@@ -15,18 +15,27 @@ bool healthProfile(struct sGENERAL *patient){
 	system("clear");
 	printf("\tCadastro:\n");
 	char name[150];
-	unsigned int age=0,sex = 0;
+	unsigned int age=0,sex = 0,AgeGroup;
 	printf("Nome:");
 	scanf("%[^\n]s",name);
 	strcpy(patient->Name,name);
 	printf("\nIdade:");
 	scanf("%d",&age);
+	if(age < 18)	patient->AgeGroup = 0;
+	if(age > 17 && age < 26)	AgeGroup = 0;
+	if(age > 25 && age < 36)	AgeGroup = 1;
+	if(age > 35 && age < 46)	AgeGroup = 2;
+	if(age > 45 && age < 56)	AgeGroup = 3;
+	if(age > 55 && age < 66)	AgeGroup = 4;
+	if(age > 65)	AgeGroup = 5;
+	
 	printf("\nGênero [1]Masculino-[2]Feminino:");
 	do{scanf("%d",&sex);}while(sex > -1 && sex < 2);
 	getchar();
 	system("clear");
-	if(healthInit(sex,age,patient) == false) return false;
-
+	if(healthInit(sex,AgeGroup,patient) == false) return false;
+	patient->Age = age;
+	patient->AgeGroup = AgeGroup;
 	FILE *patient_data = fopen("patient_data.bin","w+"); // Verificar Parâmetro
 	if(patient_data == NULL){
 		printf("File doesn't open!\n");
