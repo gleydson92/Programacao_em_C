@@ -883,3 +883,27 @@ void LCDSet(uint8_t color,uint8_t size){
 	textcolor = color;
 	textsize = size;
 }
+void LCDwriteScroll(uint8_t c){
+	if (c == '\n')
+	{
+		cursor_y -= textsize*8;
+		cursor_x = 0;
+	}
+	else if (c == '\r')
+	{
+		// skip em
+	}
+	else
+	{
+		LCDdrawchar(cursor_x, cursor_y, c);
+		cursor_x -= textsize*6;
+		if (cursor_x >= (LCDWIDTH-5))
+		{
+			cursor_x = 0;
+			cursor_y-=8;
+		}
+		if (cursor_y >= LCDHEIGHT)
+			cursor_y = 0;
+	}
+}
+

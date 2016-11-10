@@ -85,3 +85,4 @@ Lesser General Public License for more details.
  void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val);
  void _delay_ms(uint32_t t);
  void LCDDrawBitmap(const unsigned char *logo);
+ void LCDwriteScroll(uint8_t c);
