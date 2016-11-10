@@ -14,7 +14,28 @@ struct Data{
 #define DC 25
 #define DIN 24
 #define CLK 23
-#define contrast 50 	
+#define contrast 50 
+/*
+void LCDscrollText(char *string){
+	unsigned int lenght = strlen(string),charWrited=0;
+	char *scrollString = (char*)malloc(sizeof(char)*lenght);
+	scrollString = string;
+	for(unsigned int cont = 0; cont < lenght; cont++){
+		for(unsigned int cont1 = 0; cont1 < charWrited+1;cont1++){
+			printf("%c",string[cont1]);
+		}
+		printf("\n");
+		charWrited++;
+	}
+	for(unsigned int cont = 0; cont < lenght; cont++){
+		for(unsigned int cont1 = 0; cont1 < charWrited-1;cont1++){
+			printf("%c",string[cont1]);
+		}
+		printf("\n");
+		charWrited--;
+	}
+}
+*/	
 void Rollstring(char *string){
 	unsigned int lenght = strlen(string),charWrited=0;
 	//char *scrollString = (char*)malloc(sizeof(char)*lenght);
@@ -26,6 +47,26 @@ void Rollstring(char *string){
 		}
 		LCDdisplay();
 		usleep(10000);
+	}
+}
+void LCDscrollText(char *string,unsigned int time_ms){
+	unsigned int lenght = strlen(string),charWrited = 0;
+	
+	for(register unsigned int cont = 0 ; cont < lenght ; cont ++){
+		for(register unsigned int cont1 = 0; cont1 < charWrited+1;cont1++){			
+			LCDwriteScroll(string[cont1]);
+		}
+		LCDdisplay();
+		charWrited++;
+		usleep(time_ms*1000);
+	}
+	for(register unsigned int cont = 0 ; cont < lenght ; cont ++){
+		for(register unsigned int cont1 = 0; cont1 < charWrited-1;cont1++){			
+			LCDwriteScroll(string[cont1]);
+		}
+		LCDdisplay();
+		charWrited--;
+		usleep(time_ms*1000);
 	}
 }
 void lcdDisplayMain(){
