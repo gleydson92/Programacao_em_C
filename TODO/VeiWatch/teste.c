@@ -3,50 +3,66 @@
 #include"PCD8544.h"
 #include"SystemClock.h"
 #include<string.h>
+#include"wiringSerial.h"
+#include<unistd.h>
+const unsigned char SERIAL_PORT[2][30] = {"/dev/ttyAMA0","/dev/ttyUSB0"};
+
+const unsigned int BAUDS[2] = {115200,9600};
+
 struct Data{
 	unsigned int BPM;
 	float Temp;
 	char *BPMState,*TempState;
-	
 }Sensors;
-#define RST 7
-#define CE 8
-#define DC 25
-#define DIN 24
-#define CLK 23
-#define contrast 50 
-void lcdDisplayProfile(struct sGENERAL perfil){
-	char	Nokia_Nome[25],Nokia_Genero[10],Nokia_Idade[10];
-	unsigned int idade = perfil.Age;
-	snprintf(Nokia_Nome,25,"Nome:%s",perfil.Name);
-	snprintf(Nokia_Genero,10,"Genero:%s",perfil.Sex);
-	snprintf(Nokia_Idade,10,"Idade:%d",perfil.Age); 
 
-	LCDclear();
-	LCDdisplay();
-	getClockInformation(&info);
-
-
-	LCDdrawstring(25,0,"PERFIL");
-	LCDdrawline(0, 9, 83, 9, BLACK);
-	LCDdrawstring(0,11,Nokia_Nome);
-	LCDdrawstring(0,29,Nokia_Genero);
-	LCDdrawstring(0,39,Nokia_Idade);
-	
-	//LCDdrawline(0, 41, 83, 41, BLACK);
-
-	LCDdisplay();
-}
 int main(void){
-	LCDInit(CLK, DIN, DC, CE,RST, contrast);
-	struct sGENERAL patient;
-	healthProfile(&patient);
-	healthInit(MALE,2,&patient);
+	//LCDInit(CLK, DIN, DC, CE,RST, contrast);
+	struct sGENERAL person;
+	system("clear");
+	printf("Deseja Sobrescrever os Dados ? S/N\n");
+	unsigned int choose;
+	do{choose = (int)getchar();}while(choose != 115 && choose != 83 && choose != 110 && choose != 78);
+	getchar();
+	if(choose == 115 || choose == 83){
+		//LCDDrawBitmap(profile);
+		if(healthProfile(&person) == false){
+			printf("Falha ao realizar o Cadastro!\n");
+			return -1;
+		}
+	}else{
+		system("clear");
+		//LCDDrawBitmap(profile);
+		if(importData(&person)==false){
+			printf("Falha ao importar dados!\n");
+			return -1;
+		}
+	}
+	
+	//healthProfile(&patient);
+	healthInit(MALE,2,&person);
  
 	Sensors.BPM = 90;
 	Sensors.Temp = 37.8;
-	Sensors.BPMState = healthState(patient,Sensors.BPM);
+	Sensors.BPMState = healthState(person,Sensors.BPM);
 	Sensors.TempState = isNormal(Sensors.Temp);
-	
-	lcdDisplayProfile(patient);
+
+	printf("Nome:%s\n",person.Name);
+	printf("Genero:%s\n",person.Sex);
+	printf("Idade:%d\n",person.Age);
+	/*int raspDuino = serialOpen(SERIAL_PORT[1],BAUDS[1]);
+		if(raspDuino == -1){
+			printf("Houve um erro ao Abrir a porta Serial!\n");
+			return -1;
+	}	
+	serialFlush(raspDuino);
+	while(1){
+		char serialData[10];
+		//if(serialDataAvail(raspDuino)!=-1){ // Usar Thre
+		for(int cont = 0 ; cont < 10; cont++){
+			serialData[cont] = serialGetchar(raspDuino);
+		}
+		printf("%s\n",serialData);
+		for(int cont = 0 ;cont  < 10; cont++)
+			serialData[cont] = '\0';
+	}*/
 }

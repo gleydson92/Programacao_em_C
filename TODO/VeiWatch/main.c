@@ -47,60 +47,92 @@ struct Data{
 
 #define contrast 50
 
-void lcdDisplayMain(){
-	/* Inicialização do Relógio do Sistema	*/
-	char	Nokia_Temp[10],Nokia_BPM[10],INFO[]={"INFORMACOES OU ALGO DO TIPO"};
-	int lenght = strlen(INFO);
-	snprintf(Nokia_Temp,10,"%.1f*C",Sensors.Temp);
-	snprintf(Nokia_BPM,10,"%dBPM",Sensors.BPM);	
-
-	LCDclear();
-	LCDdisplay();
-	getClockInformation(&info);
-
-	printf("Data:%s\n",info.date);
-	printf("Hora:%s\n",info.time);
-	printf("Temp:%.1f\n",Sensors.Temp);
-	printf("BPM:%d\n",Sensors.BPM);
-
-	LCDdrawstring(20,0,"PRINCIPAL");
-	LCDdrawstring(0,13,Nokia_Temp);
-	LCDdrawstring(50,13,Nokia_BPM);
-	LCDdrawstring(0,26,info.date);
-	LCDdrawstring(50,26,info.time);
+void lcdDisplayMain(unsigned int fd){
 	
-	LCDdrawline(0, 35, 83, 35, BLACK);
-	// informações
-	LCDdisplay();
+	while(GPIORead(changeDisplay)!=HIGH){
+		char	Nokia_Temp[10],Nokia_BPM[10],INFO[15]={0,};
+	
+		Sensors.BPM = (unsigned int)serialGetchar(fd);
+		Sensors.Temp = ((float)serialGetchar(fd)*5/(1023))/0.01;			
+	
+		snprintf(Nokia_Temp,10,"%.1f*C",Sensors.Temp);
+		snprintf(Nokia_BPM,10,"%dBPM",Sensors.BPM);	
+	
+		LCDclear();
+		getClockInformation(&info);
+	
+		printf("Data:%s\n",info.date);
+		printf("Hora:%s\n",info.time);
+		printf("Temp:%.1f\n",Sensors.Temp);
+		printf("BPM:%d\n",Sensors.BPM);
+
+		LCDdrawstring(20,0,"PRINCIPAL");
+		LCDdrawstring(0,13,Nokia_Temp);
+		LCDdrawstring(50,13,Nokia_BPM);
+		LCDdrawstring(0,26,info.date);
+		LCDdrawstring(50,26,info.time);
+	
+		LCDdrawline(0, 35, 83, 35, BLACK);
+		// informações
+		LCDdisplay();
+	}
 }
 
-void lcdDisplayProfile(){
+void lcdDisplayProfile(struct sGENERAL perfil){
+	while(GPIORead(changeDisplay)!=HIGH){		
+		char	Nokia_Nome[25],Nokia_Genero[10],Nokia_Idade[10];
+		unsigned int idade = perfil.Age;
 
-}
-int lcdDisplaySensors(char *state_BPM, char *state_Temp){
-	char Nokia_Temp[10],Nokia_BPM[10];	
-	snprintf(Nokia_Temp,10,"%.1f*C",Sensors.Temp);
-	snprintf(Nokia_BPM,10,"%dBPM",Sensors.BPM);	
+		snprintf(Nokia_Nome,25,"Nome:%s",perfil.Name);
+		snprintf(Nokia_Genero,10,"Genero:%s",perfil.Sex);
+		snprintf(Nokia_Idade,10,"Idade:%d",perfil.Age); 
+	
+		LCDclear();
 
-	LCDclear();
+		LCDdrawstring(25,0,"PERFIL");
+		LCDdrawline(0, 9, 83, 9, BLACK);
+		LCDdrawstring(0,11,Nokia_Nome);
+		LCDdrawstring(0,29,Nokia_Genero);
+		LCDdrawstring(0,39,Nokia_Idade);
+	
+		LCDdisplay();
+	}
+}	
 
-	printf("Temp:%.1f\n",Sensors.Temp);
-	printf("BPM:%d\n",Sensors.BPM);
-	LCDdrawstring(20,0,"SENSORES");
-	LCDdrawstring(25,10,Nokia_Temp);
-	LCDdrawstring(20,20,state_Temp);
-	LCDdrawstring(25,30,Nokia_BPM);
-	LCDdrawstring(20,40,state_BPM);
+void lcdDisplaySensors(unsigned int fd,struct sGENERAL patient){
 
-	LCDdisplay();
-}
+	while(GPIORead(changeDisplay)!=HIGH){
+		char Nokia_Temp[10],Nokia_BPM[10];	
+	
+		Sensors.BPM = (unsigned int)serialGetchar(fd);
+		Sensors.Temp = ((float)serialGetchar(fd)*5/(1023))/0.01;			
+		Sensors.BPMState = healthState(patient,Sensors.BPM);
+		Sensors.TempState = isNormal(Sensors.Temp);
+	
+		snprintf(Nokia_Temp,10,"%.1f*C",Sensors.Temp);
+		snprintf(Nokia_BPM,10,"%dBPM",Sensors.BPM);	
+	
+		LCDclear();
+
+		printf("Temp:%.1f\n",Sensors.Temp);
+		printf("BPM:%d\n",Sensors.BPM);
+		LCDdrawstring(20,0,"SENSORES");
+		LCDdrawstring(25,10,Nokia_Temp);
+		LCDdrawstring(20,20,Sensors.TempState);
+		LCDdrawstring(25,30,Nokia_BPM);
+		LCDdrawstring(20,40,Sensors.BPMState);
+	
+		LCDdisplay();
+	}
+}	
 const unsigned char SERIAL_PORT[2][30] = {"/dev/ttyAMA0","/dev/ttyUSB0"};
 
 const unsigned int BAUDS[2] = {115200,9600};
 
 int main(void){
+
 	LCDInit(CLK, DIN, DC, CE,RST, contrast);
-  //LCDInit(_sclk, _din, _dc, _cs, _rst, contrast);
+
   	LCDclear();
 	LCDshowLogo();
 	struct sGENERAL person;
@@ -108,7 +140,7 @@ int main(void){
 
 	system("clear");
 	printf("Deseja Sobrescrever os Dados ? S/N\n");
-	int choose;
+	unsigned int choose;
 	do{choose = (int)getchar();}while(choose != 115 && choose != 83 && choose != 110 && choose != 78);
 	getchar();
 	if(choose == 115 || choose == 83){
@@ -135,11 +167,10 @@ int main(void){
 	serialFlush(raspDuino);
 	
 	GPIOExport(changeDisplay);	GPIODirection(changeDisplay,INPUT);
-	GPIOExport(backLight);	GPIODirection(backLight,INPUT);
-	GPIOExport(BL);	GPIODirection(BL,OUTPUT);
+	GPIOExport(backLight);		GPIODirection(backLight,INPUT);
+	GPIOExport(BL);				GPIODirection(BL,OUTPUT);
 
 	uint8_t change_Layer = 0;
-	uint8_t light_State = LOW;
 
 	while(1){
 		if(GPIORead(changeDisplay) == HIGH){
@@ -149,24 +180,25 @@ int main(void){
 		}
 		if(GPIORead(backLight) == HIGH){
 			while(GPIORead(backLight) == HIGH){}
-			light_State = ! light_State;
-			GPIOWrite(BL,light_State);
+			GPIOWrite(BL,!GPIORead(BL));
 		}
 		switch(change_Layer){
 			case 0:
-				lcdDisplayMain();
+				lcdDisplayMain(raspDuino);
 				break;
 			case 1:
-				lcdDisplayProfile();
+				lcdDisplayProfile(person);
 				break;
 			case 2:
-				lcdDisplaySensors(Sensors.BPMState,Sensors.TempState);
+				lcdDisplaySensors(raspDuino,person);
+				break;
 		}
-		if(serialDataAvail(raspDuino)!=-1){ // Usar Threads 
+		/*if(serialDataAvail(raspDuino)!=-1){ // Usar Threads 
 			Sensors.BPM = (unsigned int)serialGetchar(raspDuino);
 			Sensors.Temp = ((float)serialGetchar(raspDuino)*5/(1023))/0.01;
+			
 			Sensors.BPMState = healthState(person,Sensors.BPM);
 			Sensors.TempState = isNormal(Sensors.Temp);
-		}
+		}*/
 	}
 }

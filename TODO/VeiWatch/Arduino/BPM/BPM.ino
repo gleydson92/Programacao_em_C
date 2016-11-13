@@ -26,24 +26,19 @@ void loop() {
     }
     times[1]=millis();
     if((times[1]-aux) > 10000){
-      //float temp = ((float)analogRead(LM35)*5/(1023))/0.01;
       
       Data_Sended = false;
       
       Serial.write(analogRead(LM35));
       Serial.flush();
       Serial.write(iCount*6);
-      
       aux = millis();
       iCount = 0;
     }
     if((times[1]-times[0]) > 60000){
-      for(register unsigned int count = 0 ; count < 10 ; count ++){
-        Serial.write(analogRead(LM35));
-        Serial.flush();
-        Serial.write(cont);
-        delay(1000);
-      }
+      Serial.write(analogRead(LM35));
+      Serial.flush();
+      Serial.write(cont);
       times[0]=millis();
       cont = 0;
     }
