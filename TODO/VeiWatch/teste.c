@@ -29,15 +29,15 @@ unsigned int displayMain = 0, displayProfile = 0,displaySensors=0;
 
 void lcdDisplayMain(LCD display,unsigned int fd){
 
-	static int lanstMinute = 0;
+	static int lastMinute = 0,lastBPM = 0;
 	char	Nokia_Temp[10],Nokia_BPM[10],INFO[15]={0,};
 	
 	//Sensors.BPM = (unsigned int)serialGetchar(fd);
 	//Sensors.Temp = ((float)serialGetchar(fd)*5/(1023))/0.01;			
 	
 	getClockInformation(&info);
-
-	if(change_Layer == 0 && minute!=lastMinute){
+	if(change_Layer == 0 && (info.minute!=lastMinute || Sensors.BPM != lastBPM)){
+//	if(change_Layer == 0 && info.minute!=lastMinute){
 		
 		printf("1-)Tela Principal!\n");
 		snprintf(Nokia_Temp,10,"%.1f*C",Sensors.Temp);
@@ -74,15 +74,16 @@ void lcdDisplayProfile(LCD display, struct sGENERAL perfil){
 
 void lcdDisplaySensors(LCD display, unsigned int fd,struct sGENERAL patient){
 	char Nokia_Temp[10],Nokia_BPM[10];
+	static int lastBPM = 0;
 	//Sensors.BPM = (unsigned int)serialGetchar(fd);
 	//Sensors.Temp = ((float)serialGetchar(fd)*5/(1023))/0.01;			
 	//Sensors.BPMState = healthState(patient,Sensors.BPM);
 	//Sensors.TempState = isNormal(Sensors.Temp);
 
-	if(change_Layer == 2 && lastBPM != Sensor.BPM){
+	if(change_Layer == 2 && lastBPM != Sensors.BPM){
 
 		printf("3-)Tela de Sensores!\n");
-		static lastBPM = Sensors.BPM;
+		lastBPM = Sensors.BPM;
 		snprintf(Nokia_Temp,10,"%.1f*C",Sensors.Temp);
 		snprintf(Nokia_BPM,10,"%dBPM",Sensors.BPM);	
 		NOKIAClear(display);
