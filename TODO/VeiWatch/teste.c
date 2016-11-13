@@ -17,101 +17,96 @@
 #define changeDisplay 27
 /*Output GPIO*/
 #define BL 18
+
 struct Data{
 	unsigned int BPM;
 	float Temp;
 	char *BPMState,*TempState;	
 }Sensors;
 
+uint8_t change_Layer = 0, profileViewed = 0;
+unsigned int displayMain = 0, displayProfile = 0,displaySensors=0;
+
 void lcdDisplayMain(LCD display,unsigned int fd){
+
+	static int lanstMinute = 0;
+	char	Nokia_Temp[10],Nokia_BPM[10],INFO[15]={0,};
 	
-	//while(GPIORead(changeDisplay)!=HIGH){
-		char	Nokia_Temp[10],Nokia_BPM[10],INFO[15]={0,};
+	//Sensors.BPM = (unsigned int)serialGetchar(fd);
+	//Sensors.Temp = ((float)serialGetchar(fd)*5/(1023))/0.01;			
 	
-		Sensors.BPM = (unsigned int)serialGetchar(fd);
-		Sensors.Temp = ((float)serialGetchar(fd)*5/(1023))/0.01;			
-	
+	getClockInformation(&info);
+
+	if(change_Layer == 0 && minute!=lastMinute){
+		
+		printf("1-)Tela Principal!\n");
 		snprintf(Nokia_Temp,10,"%.1f*C",Sensors.Temp);
 		snprintf(Nokia_BPM,10,"%dBPM",Sensors.BPM);	
-	
+		lastMinute = info.minute;
 		NOKIAClear(display);
-		getClockInformation(&info);
-	
-		printf("Data:%s\n",info.date);
-		printf("Hora:%s\n",info.time);
-		printf("Temp:%.1f\n",Sensors.Temp);
-		printf("BPM:%d\n",Sensors.BPM);
-
 		NOKIAString(display,0,0,"PRINCIPAL");
-		NOKIAString(display,1,0,Nokia_Temp);
-		NOKIAString(display,1,50,Nokia_BPM);
-		NOKIAString(display,2,0,info.date);
-		NOKIAString(display,2,50,info.time);
-	
-//		LCDdrawline(0, 35, 83, 35, BLACK);
-		// informações
-//		LCDdisplay();
-	//}
+		NOKIAString(display,0,1,Nokia_Temp);
+		NOKIAString(display,50,1,Nokia_BPM);
+		NOKIAString(display,0,2,info.date);
+		NOKIAString(display,50,2,info.time);
+	}
 }
 void lcdDisplayProfile(LCD display, struct sGENERAL perfil){
-	//while(GPIORead(changeDisplay)!=HIGH){		
-		char	Nokia_Nome[25],Nokia_Genero[10],Nokia_Idade[10];
-		unsigned int idade = perfil.Age;
 
+	char	Nokia_Nome[25],Nokia_Genero[10],Nokia_Idade[10];
+	unsigned int idade = perfil.Age;
+
+	if(change_Layer ==1 && profileViewed == 0){	
+
+		printf("2-)Tela de Perfil!\n");
 		snprintf(Nokia_Nome,25,"Nome:%s",perfil.Name);
 		snprintf(Nokia_Genero,10,"Genero:%s",perfil.Sex);
 		snprintf(Nokia_Idade,10,"Idade:%d",perfil.Age); 
 	
 		NOKIAClear(display);
-
-		NOKIAString(display,0,25,"PERFIL");
-		//LCDdrawline(0, 9, 83, 9, BLACK);
-		NOKIAString(display,1,0,Nokia_Nome);
-		NOKIAString(display,3,0,Nokia_Genero);
-		NOKIAString(display,4,0,Nokia_Idade);
-	
-	//}
+		NOKIAString(display,25,0,"PERFIL");
+		NOKIAString(display,0,1,Nokia_Nome);
+		NOKIAString(display,0,3,Nokia_Genero);
+		NOKIAString(display,0,4,Nokia_Idade);
+		profileViewed = 1;
+	}
 }	
 
 void lcdDisplaySensors(LCD display, unsigned int fd,struct sGENERAL patient){
+	char Nokia_Temp[10],Nokia_BPM[10];
+	//Sensors.BPM = (unsigned int)serialGetchar(fd);
+	//Sensors.Temp = ((float)serialGetchar(fd)*5/(1023))/0.01;			
+	//Sensors.BPMState = healthState(patient,Sensors.BPM);
+	//Sensors.TempState = isNormal(Sensors.Temp);
 
-	//while(GPIORead(changeDisplay)!=HIGH){
-		char Nokia_Temp[10],Nokia_BPM[10];	
-	
-		Sensors.BPM = (unsigned int)serialGetchar(fd);
-		Sensors.Temp = ((float)serialGetchar(fd)*5/(1023))/0.01;			
-		Sensors.BPMState = healthState(patient,Sensors.BPM);
-		Sensors.TempState = isNormal(Sensors.Temp);
-	
+	if(change_Layer == 2 && lastBPM != Sensor.BPM){
+
+		printf("3-)Tela de Sensores!\n");
+		static lastBPM = Sensors.BPM;
 		snprintf(Nokia_Temp,10,"%.1f*C",Sensors.Temp);
 		snprintf(Nokia_BPM,10,"%dBPM",Sensors.BPM);	
-	
 		NOKIAClear(display);
-
-		printf("Temp:%.1f\n",Sensors.Temp);
-		printf("BPM:%d\n",Sensors.BPM);
-		NOKIAString(display,0,20,"SENSORES");
-		NOKIAString(display,1,25,Nokia_Temp);
-		NOKIAString(display,2,20,Sensors.TempState);
-		NOKIAString(display,3,25,Nokia_BPM);
-		NOKIAString(display,4,20,Sensors.BPMState);
-	
-	//}
+		NOKIAString(display,20,0,"SENSORES");
+		NOKIAString(display,25,1,Nokia_Temp);
+		NOKIAString(display,20,2,Sensors.TempState);
+		NOKIAString(display,25,3,Nokia_BPM);
+		NOKIAString(display,20,4,Sensors.BPMState);
+	}
 }	
 
 int main(void){
 	LCD	nokia= NOKIAInit(CE,RST,DC,DIN,CLK);
+
 	NOKIABitmap(nokia,RPi);	
 
 	struct sGENERAL person;
 
-	unsigned int estado = LOW,raspDuino;
+	unsigned int raspDuino;
 
 	GPIOExport(changeDisplay);	GPIODirection(changeDisplay,INPUT);
 	GPIOExport(backLight);		GPIODirection(backLight,INPUT);
 	GPIOExport(BL);				GPIODirection(BL,OUTPUT);
 	GPIOWrite(BL,HIGH);
-	uint8_t change_Layer = 0;
 
 	while(1){
 		if(GPIORead(changeDisplay) == HIGH){
@@ -126,16 +121,16 @@ int main(void){
 		}
 		switch(change_Layer){
 			case 0:
+				//profileViewed=1;
 				lcdDisplayMain(nokia,raspDuino);
-				printf("1-)Tela Principal!\n");
 				break;
 			case 1:
+				profileViewed=0;
 				lcdDisplayProfile(nokia, person);
-				printf("2-)Tela de Perfil!\n");
 				break;
 			case 2:
+				//profileViewed=1;
 				lcdDisplaySensors(nokia, raspDuino,person);
-				printf("3-)Tela de Sensores!\n");
 				break;
 		}
 	}	
