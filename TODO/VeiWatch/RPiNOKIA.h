@@ -25,9 +25,6 @@ E a mesma ainda está em desenvolvimento por Calebe94(Parcialmente terminada)
   |()      [RST][CE][DC][Din][Vcc][BL][GND]     ()|
   +-----------------------------------------------+
 */
-#ifndef __RPINOKIA_H__
-#define __RPINOKIA_H__
-#endif
 #include<stdint.h>
 #include<stdlib.h>
 #include"RaspberryGPIO.h"
@@ -48,11 +45,39 @@ E a mesma ainda está em desenvolvimento por Calebe94(Parcialmente terminada)
 #define HIGH 	1
 #define LOW 	0
 
-struct NOKIAData{
-   unsigned int PIN_SCE,PIN_RESET,PIN_DC,PIN_SDIN,PIN_SCLK;
-}NOKIA_LCD[MAX_LCDS];
+/* New Definitions */
+#define BLACK 1
+#define WHITE 0
 
-void shiftOut(const int lcd,uint8_t dataPin,uint8_t clockPin,uint8_t bitOrder,uint8_t value);
+#define LCDWIDTH 84
+#define LCDHEIGHT 48
+
+#define PCD8544_POWERDOWN 0x04
+#define PCD8544_ENTRYMODE 0x02
+#define PCD8544_EXTENDEDINSTRUCTION 0x01
+
+#define PCD8544_DISPLAYBLANK 0x0
+#define PCD8544_DISPLAYNORMAL 0x4
+#define PCD8544_DISPLAYALLON 0x1
+#define PCD8544_DISPLAYINVERTED 0x5
+
+// H = 0
+#define PCD8544_FUNCTIONSET 0x20
+#define PCD8544_DISPLAYCONTROL 0x08
+#define PCD8544_SETYADDR 0x40
+#define PCD8544_SETXADDR 0x80
+
+// H = 1
+#define PCD8544_SETTEMP 0x04
+#define PCD8544_SETBIAS 0x10
+#define PCD8544_SETVOP 0x80
+
+
+typedef struct{
+   unsigned int PIN_SCE,PIN_RESET,PIN_DC,PIN_SDIN,PIN_SCLK;
+}LCD;
+
+void shiftOut(LCD lcd,uint8_t dataPin,uint8_t clockPin,uint8_t bitOrder,uint8_t value);
 
  static const uint8_t ASCII[][5] = {
  {0x00, 0x00, 0x00, 0x00, 0x00} // 20
@@ -152,12 +177,13 @@ void shiftOut(const int lcd,uint8_t dataPin,uint8_t clockPin,uint8_t bitOrder,ui
 ,{0x10, 0x08, 0x08, 0x10, 0x08} // 7e ←
 ,{0x00, 0x06, 0x09, 0x09, 0x06} // 7f →
 };
-void NOKIAWrite(const int lcd, uint8_t dc, uint8_t data);
-void NOKIACharacter(const int lcd,char character);
-void NOKIAClear(const int lcd);
-int NOKIAInit(unsigned const int PIN_SCE,unsigned const int PIN_RESET,unsigned const int PIN_DC,unsigned const int PIN_SDIN,unsigned const int PIN_SCLK);
-void NOKIAString(const int lcd,char *characters);
-void NOKIAMove(const int lcd ,uint8_t x, uint8_t y);
-void NOKIADrawHL(const int lcd,const int begin,const int end);
-void NOKIADrawVL(const int lcd,const int begin,const int end);
-void NOKIADrawbox(const int lcd,const int x,const int y,const int beginX,const int endX,const int beginY,const int endY);
+void NOKIABitmap(LCD lcd,const uint8_t *logo);
+void NOKIAWrite(LCD lcd, uint8_t dc, uint8_t data);
+void NOKIACharacter(LCD lcd,char character);
+void NOKIAClear(LCD lcd);
+LCD NOKIAInit(unsigned const int PIN_SCE,unsigned const int PIN_RESET,unsigned const int PIN_DC,unsigned const int PIN_SDIN,unsigned const int PIN_SCLK);
+void NOKIAString(LCD lcd,uint8_t x, uint8_t y,char *characters);
+void NOKIAMove(LCD lcd ,uint8_t x, uint8_t y);
+void NOKIADrawHL(LCD lcd,const int begin,const int end);
+void NOKIADrawVL(LCD lcd,const int begin,const int end);
+void NOKIADrawbox(LCD lcd,const int x,const int y,const int beginX,const int endX,const int beginY,const int endY);

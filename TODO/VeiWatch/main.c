@@ -48,7 +48,7 @@ struct Data{
 }Sensors;
 
 
-void lcdDisplayMain(unsigned int fd){
+void lcdDisplayMain(unsigned int display,unsigned int fd){
 	
 	//while(GPIORead(changeDisplay)!=HIGH){
 		char	Nokia_Temp[10],Nokia_BPM[10],INFO[15]={0,};
@@ -59,7 +59,7 @@ void lcdDisplayMain(unsigned int fd){
 		snprintf(Nokia_Temp,10,"%.1f*C",Sensors.Temp);
 		snprintf(Nokia_BPM,10,"%dBPM",Sensors.BPM);	
 	
-		LCDclear();
+		NOKIAClear(display);
 		getClockInformation(&info);
 	
 		printf("Data:%s\n",info.date);
@@ -67,15 +67,15 @@ void lcdDisplayMain(unsigned int fd){
 		printf("Temp:%.1f\n",Sensors.Temp);
 		printf("BPM:%d\n",Sensors.BPM);
 
-		LCDdrawstring(20,0,"PRINCIPAL");
-		LCDdrawstring(0,13,Nokia_Temp);
-		LCDdrawstring(50,13,Nokia_BPM);
-		LCDdrawstring(0,26,info.date);
-		LCDdrawstring(50,26,info.time);
+		NOKIAString(display,0,0,"PRINCIPAL");
+		NOKIAString(display,1,0,Nokia_Temp);
+		NOKIAString(display,1,50,Nokia_BPM);
+		NOKIAString(display,2,0,info.date);
+		NOKIAString(display,2,50,info.time);
 	
-		LCDdrawline(0, 35, 83, 35, BLACK);
+//		LCDdrawline(0, 35, 83, 35, BLACK);
 		// informações
-		LCDdisplay();
+//		LCDdisplay();
 	//}
 }
 
