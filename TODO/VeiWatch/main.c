@@ -38,18 +38,19 @@
 #define changeDisplay 27
 /*Output GPIO*/
 #define BL 18
-struct Data{
-	unsigned int BPM;
-	float Temp;
-	char *BPMState,*TempState;
-	
-}Sensors;
 
 #define contrast 50
 
+struct Data{
+	unsigned int BPM;
+	float Temp;
+	char *BPMState,*TempState;	
+}Sensors;
+
+
 void lcdDisplayMain(unsigned int fd){
 	
-	while(GPIORead(changeDisplay)!=HIGH){
+	//while(GPIORead(changeDisplay)!=HIGH){
 		char	Nokia_Temp[10],Nokia_BPM[10],INFO[15]={0,};
 	
 		Sensors.BPM = (unsigned int)serialGetchar(fd);
@@ -75,11 +76,11 @@ void lcdDisplayMain(unsigned int fd){
 		LCDdrawline(0, 35, 83, 35, BLACK);
 		// informações
 		LCDdisplay();
-	}
+	//}
 }
 
 void lcdDisplayProfile(struct sGENERAL perfil){
-	while(GPIORead(changeDisplay)!=HIGH){		
+	//while(GPIORead(changeDisplay)!=HIGH){		
 		char	Nokia_Nome[25],Nokia_Genero[10],Nokia_Idade[10];
 		unsigned int idade = perfil.Age;
 
@@ -96,12 +97,12 @@ void lcdDisplayProfile(struct sGENERAL perfil){
 		LCDdrawstring(0,39,Nokia_Idade);
 	
 		LCDdisplay();
-	}
+	//}
 }	
 
 void lcdDisplaySensors(unsigned int fd,struct sGENERAL patient){
 
-	while(GPIORead(changeDisplay)!=HIGH){
+	//while(GPIORead(changeDisplay)!=HIGH){
 		char Nokia_Temp[10],Nokia_BPM[10];	
 	
 		Sensors.BPM = (unsigned int)serialGetchar(fd);
@@ -123,7 +124,7 @@ void lcdDisplaySensors(unsigned int fd,struct sGENERAL patient){
 		LCDdrawstring(20,40,Sensors.BPMState);
 	
 		LCDdisplay();
-	}
+	//}
 }	
 const unsigned char SERIAL_PORT[2][30] = {"/dev/ttyAMA0","/dev/ttyUSB0"};
 
@@ -169,6 +170,7 @@ int main(void){
 	GPIOExport(changeDisplay);	GPIODirection(changeDisplay,INPUT);
 	GPIOExport(backLight);		GPIODirection(backLight,INPUT);
 	GPIOExport(BL);				GPIODirection(BL,OUTPUT);
+	GPIOWrite(BL,HIGH);
 
 	uint8_t change_Layer = 0;
 
