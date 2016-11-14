@@ -126,9 +126,6 @@ void lcdDisplaySensors(unsigned int fd,struct sGENERAL patient){
 		LCDdisplay();
 	//}
 }	
-const unsigned char SERIAL_PORT[2][30] = {"/dev/ttyAMA0","/dev/ttyUSB0"};
-
-const unsigned int BAUDS[2] = {115200,9600};
 
 int main(void){
 

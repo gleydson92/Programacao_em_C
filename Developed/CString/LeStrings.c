@@ -22,28 +22,28 @@
 char *lestring(int min, int max);
 int main(void){	
 	char *nome;
-	nome = lestring(3,0);
+	nome = lestring(3,10);
 	printf("%s",nome);
 	free(nome);
 }
 char *lestring(int min,int max){ 
-	int tamanho = 0;
+	int tamanho = 0,vezes = 0;
 	if(max == 0)	max = BUFSIZ;
 	char aux;
 	char *string;
 	string = (char *)malloc(tamanho);
-	REFAZ:while((aux = getchar()) != '\n'){
-		string = (char *)realloc(string,tamanho + 1*sizeof(char));
-		string[tamanho++] = aux ;
-	}
-	if(strlen(string)<min){
+	do{
 		tamanho = 0;
-		goto REFAZ;
-	}
-	if(strlen(string)>=max)	{
-		tamanho = 0;
-		goto REFAZ;
-	}
+		if(vezes > 0){
+			free(string);			
+			string = (char*)malloc(tamanho);
+		}
+		while((aux = getchar()) != '\n'){
+			string = (char *)realloc(string,tamanho + 1*sizeof(char));
+			string[tamanho++] = aux ;
+		}
+		vezes ++;
+	}while(strlen(string) < min || strlen(string) > max);
 	string[tamanho++] = '\0';
 	return realloc(string,sizeof(char)*tamanho);
 }

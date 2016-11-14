@@ -1,12 +1,24 @@
-#include"VeiWatch.h"
-
-char Temp_Report[4][15]={"Hypothermia","Normal","Fever","Hyperpyrexia"};
-
-char *isNormal(float Temp){
-	while(Temp < 35.0)	return Temp_Report[0];
-	while(Temp > 36.2 && Temp < 37.6)	return Temp_Report[1];
-	while(Temp > 37.6 && Temp < 38.3)	return Temp_Report[2];
-	while(Temp > 40.0)	return Temp_Report[3];
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdbool.h>
+#include <pthread.h>
+#include <termios.h>
+int kbhit(void);
+int getch(void);
+int getnum(void);
+int main(void){
+	while(1){
+		//while(!kbhit()){}
+		//int leitura=(int)getchar();
+		//int leitura = getch()-48;
+		int leitura = getnum();
+		printf("Você pressionou '%d'!\n",leitura);	
+		//char caractere = (char)leitura;		printf("Você pressionou '%c'!\n",caractere);	
+	}	
 }
 int getnum(void){
 	while(!kbhit()){}

@@ -18,14 +18,9 @@
 /*Output GPIO*/
 #define BL 18
 
-typedef struct{
-	uint8_t BPM;
-	uint8_t lastMinute,lastBPM;	//Armazena os últimos estados
-	uint8_t mViewed,pViewed,sViewed; // Armazena estado da Tela: Se está vista[1], se não [0]
-	uint8_t mWatching,pWatching,sWatching;
-	float Temp;
-	char *BPMState,*TempState;
-}Vei_Data;
+const unsigned char SERIAL_PORT[2][30] = {"/dev/ttyAMA0","/dev/ttyUSB0"};
+
+const unsigned int BAUDS[2] = {115200,9600};
 
 uint8_t change_Layer = 0;
 
@@ -35,15 +30,15 @@ void lcdDisplayMain(LCD display,unsigned int fd){
 
 	char	Nokia_Temp[10],Nokia_BPM[10],INFO[15]={0,};
 	
-	//control.BPM = (unsigned int)serialGetchar(fd);
-	//control.Temp = ((float)serialGetchar(fd)*5/(1023))/0.01;			
+	control.BPM = (unsigned int)serialGetchar(fd);
+	control.Temp = ((float)serialGetchar(fd)*5/(1023))/0.01;			
 	
 	getClockInformation(&info);
 	if(change_Layer == 0 && control.mWatching == 0){
 		NOKIABitmap(display,main_display);		delay_ms(1000);	
 		control.mWatching = 1;
 		control.lastMinute = info.minute;
-		printf("1-)Tela Principal!\n");
+		//printf("1-)Tela Principal!\n");
 		snprintf(Nokia_Temp,10,"%.1f*C",control.Temp);
 		snprintf(Nokia_BPM,10,"%dBPM",control.BPM);	
 		control.lastMinute = info.minute;
@@ -51,20 +46,22 @@ void lcdDisplayMain(LCD display,unsigned int fd){
 		NOKIAClear(display);
 
 		NOKIAString(display,0,0,"PRINCIPAL");
-		NOKIAString(display,0,1,Nokia_Temp);
-		NOKIAString(display,50,1,Nokia_BPM);
-		NOKIAString(display,0,2,info.date);
-		NOKIAString(display,50,2,info.time);
+		NOKIADrawHL(display,1,84);
+		NOKIAString(display,0,2,Nokia_Temp);
+		NOKIAString(display,50,2,Nokia_BPM);
+		NOKIAString(display,0,3,info.date);
+		NOKIAString(display,50,3,info.time);
 	}
 	if(change_Layer == 0 && control.mWatching == 1 && (info.minute != control.lastMinute || control.BPM != control.lastBPM)){
 		
 		snprintf(Nokia_Temp,10,"%.1f*C",control.Temp);
 		snprintf(Nokia_BPM,10,"%dBPM",control.BPM);	
 		NOKIAString(display,0,0,"PRINCIPAL");
-		NOKIAString(display,0,1,Nokia_Temp);
-		NOKIAString(display,50,1,Nokia_BPM);
-		NOKIAString(display,0,2,info.date);
-		NOKIAString(display,50,2,info.time);
+		NOKIADrawHL(display,1,84);
+		NOKIAString(display,0,2,Nokia_Temp);
+		NOKIAString(display,50,2,Nokia_BPM);
+		NOKIAString(display,0,3,info.date);
+		NOKIAString(display,50,3,info.time);
 	}
 }
 void lcdDisplayProfile(LCD display, struct sGENERAL perfil){
@@ -75,50 +72,53 @@ void lcdDisplayProfile(LCD display, struct sGENERAL perfil){
 		
 		NOKIABitmap(display,profile);				delay_ms(1000);
 		control.pWatching = 1;
-		printf("2-)Tela de Perfil!\n");
+		//printf("2-)Tela de Perfil!\n");
 		snprintf(Nokia_Nome,25,"Nome:%s",perfil.Name);
 		snprintf(Nokia_Genero,10,"Genero:%s",perfil.Sex);
 		snprintf(Nokia_Idade,10,"Idade:%d",perfil.Age); 
 		NOKIAClear(display);
 		NOKIAString(display,25,0,"PERFIL");
-		NOKIAString(display,0,1,Nokia_Nome);
-		NOKIAString(display,0,3,Nokia_Genero);
-		NOKIAString(display,0,4,Nokia_Idade);
+		NOKIADrawHL(display,1,84);
+		NOKIAString(display,0,2,Nokia_Nome);
+		NOKIAString(display,0,4,Nokia_Genero);
+		NOKIAString(display,0,5,Nokia_Idade);
 	}
 }	 
 
 void lcdDisplaySensors(LCD display, unsigned int fd,struct sGENERAL patient){
 	char Nokia_Temp[10],Nokia_BPM[10];
-	//control.BPM = (unsigned int)serialGetchar(fd);
-	//control.Temp = ((float)serialGetchar(fd)*5/(1023))/0.01;			
-	//control.BPMState = healthState(patient,control.BPM);
-	//control.TempState = isNormal(control.Temp);
+	control.BPM = (unsigned int)serialGetchar(fd);
+	control.Temp = ((float)serialGetchar(fd)*5/(1023))/0.01;			
+	control.BPMState = healthState(patient,control.BPM);
+	control.TempState = isNormal(control.Temp);
 
 	if(change_Layer == 2 && control.sWatching == 0){
 
 		NOKIABitmap(display,sensors);				delay_ms(1000);
 		control.sWatching = 1;
 		control.lastBPM = control.BPM;
-		printf("3-)Tela de Sensores!\n");
+		//printf("3-)Tela de Sensores!\n");
 		snprintf(Nokia_Temp,10,"%.1f*C",control.Temp);
 		snprintf(Nokia_BPM,10,"%dBPM",control.BPM);	
 		NOKIAClear(display);
 		NOKIAString(display,20,0,"SENSORES");
-		NOKIAString(display,25,1,Nokia_Temp);
-		//NOKIAString(display,20,2,control.TempState);
-		NOKIAString(display,25,3,Nokia_BPM);
-		//NOKIAString(display,20,4,control.BPMState);
+		NOKIADrawHL(display,1,84);
+		NOKIAString(display,25,2,Nokia_Temp);
+		NOKIAString(display,20,3,control.TempState);
+		NOKIAString(display,25,4,Nokia_BPM);
+		NOKIAString(display,20,5,control.BPMState);
 	}
 
 	if(change_Layer == 2 && control.sWatching == 1 && control.BPM != control.lastBPM){
 		control.lastBPM = control.BPM;
 		snprintf(Nokia_Temp,10,"%.1f*C",control.Temp);
-		snprintf(Nokia_BPM,10,"%dBPM",control.BPM);	
+		snprintf(Nokia_BPM,10,"%dBPM",control.BPM);
 		NOKIAString(display,20,0,"SENSORES");
-		NOKIAString(display,25,1,Nokia_Temp);
-		//NOKIAString(display,20,2,control.TempState);
-		NOKIAString(display,25,3,Nokia_BPM);
-		//NOKIAString(display,20,4,control.BPMState);
+		NOKIADrawHL(display,1,84);
+		NOKIAString(display,25,2,Nokia_Temp);
+		NOKIAString(display,20,3,control.TempState);
+		NOKIAString(display,25,4,Nokia_BPM);
+		NOKIAString(display,20,5,control.BPMState);
 	}
 }	
 
@@ -129,15 +129,48 @@ int main(void){
 
 	struct sGENERAL person;
 
-	unsigned int raspDuino;
+	system("clear");
+	printf("Deseja Sobrescrever os Dados ? S/N\n");
+	unsigned int choose;
+	do{choose = (int)getch();}while(choose != 115 && choose != 83 && choose != 110 && choose != 78);
+	//getchar();
+	if(choose == 115 || choose == 83){
+		NOKIABitmap(nokia,profile);
+		if(healthProfile(&person) == false){
+			printf("Falha ao realizar o Cadastro!\n");
+			return -1;
+		}else{
+			change_Layer = 2;
+			lcdDisplayProfile(nokia, person);
+			delay_ms(1000);
+			change_Layer = 0;
+		}
+	}else{
+		system("clear");
+		NOKIABitmap(nokia,profile);
+		if(importData(&person)==false){
+			printf("Falha ao importar dados!\n");
+			return -1;
+		}else{
+			change_Layer = 2;
+			lcdDisplayProfile(nokia, person);
+			delay_ms(1000);
+			change_Layer = 0;					
+		}
+	}
+	NOKIABitmap(nokia,sensors);
+	int raspDuino = serialOpen(SERIAL_PORT[1],BAUDS[1]);
+	if(raspDuino == -1){
+		printf("Houve um erro ao Abrir a porta Serial!\n");
+		return -1;
+	}
 
+	serialFlush(raspDuino);
+	
 	GPIOExport(changeDisplay);	GPIODirection(changeDisplay,INPUT);
 	GPIOExport(backLight);		GPIODirection(backLight,INPUT);
 	GPIOExport(BL);				GPIODirection(BL,OUTPUT);
 	GPIOWrite(BL,HIGH);
-
-	control.Temp = 36.5;
-	control.BPM = 75;
 
 	while(1){
 		if(GPIORead(changeDisplay) == HIGH){
@@ -148,7 +181,7 @@ int main(void){
 		if(GPIORead(backLight) == HIGH){
 			while(GPIORead(backLight) == HIGH){}
 			GPIOWrite(BL,!GPIORead(BL));
-			printf("Luz [1]Acesa-[0]Apagada:%d\n",GPIORead(BL));
+			//printf("Luz [1]Acesa-[0]Apagada:%d\n",GPIORead(BL));
 		}
 		switch(change_Layer){
 			case 0:
@@ -157,11 +190,11 @@ int main(void){
 				break;
 			case 1:
 				control.mWatching = 0;	control.sWatching = 0;
-				lcdDisplayProfile(nokia, person);
+				lcdDisplayProfile(nokia,person);
 				break;
 			case 2:
 				control.mWatching = 0;	control.pWatching = 0;
-				lcdDisplaySensors(nokia, raspDuino,person);
+				lcdDisplaySensors(nokia,raspDuino,person);
 				break;
 		}
 	}	
