@@ -52,8 +52,6 @@ void NOKIABitmap(LCD lcd,const uint8_t *logo){
 	for(unsigned int count = 0 ; count < LCD_X * LCD_Y / 8; count++){
 		buffer[count] = logo[count];
 	}
-	//NOKIADisplay();
-	
 	for(unsigned int line = 0 ; line < 6; line++){
 		NOKIAWrite(lcd,LOW,PCD8544_SETYADDR | line)	;
 		
@@ -64,8 +62,6 @@ void NOKIABitmap(LCD lcd,const uint8_t *logo){
 	}
 	NOKIAWrite(lcd,LOW,PCD8544_SETYADDR);
 }
-/* 	Tentativa de desenhar Bitmaps	*/
-
 
 void NOKIAWrite(LCD lcd, uint8_t dc, uint8_t data){
   GPIOWrite(lcd.PIN_DC, dc);
