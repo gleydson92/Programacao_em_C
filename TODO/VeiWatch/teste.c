@@ -35,11 +35,12 @@ void lcdDisplayMain(LCD display,unsigned int fd){
 
 	char	Nokia_Temp[10],Nokia_BPM[10],INFO[15]={0,};
 	
-	control.BPM = (unsigned int)serialGetchar(fd);
-	control.Temp = ((float)serialGetchar(fd)*5/(1023))/0.01;			
+	//control.BPM = (unsigned int)serialGetchar(fd);
+	//control.Temp = ((float)serialGetchar(fd)*5/(1023))/0.01;			
 	
 	getClockInformation(&info);
 	if(change_Layer == 0 && control.mWatching == 0){
+		NOKIABitmap(display,main_display);		delay_ms(1000);	
 		control.mWatching = 1;
 		control.lastMinute = info.minute;
 		printf("1-)Tela Principal!\n");
@@ -72,6 +73,7 @@ void lcdDisplayProfile(LCD display, struct sGENERAL perfil){
 
 	if(change_Layer ==1 && control.pWatching == 0){	
 		
+		NOKIABitmap(display,profile);				delay_ms(1000);
 		control.pWatching = 1;
 		printf("2-)Tela de Perfil!\n");
 		snprintf(Nokia_Nome,25,"Nome:%s",perfil.Name);
@@ -87,12 +89,14 @@ void lcdDisplayProfile(LCD display, struct sGENERAL perfil){
 
 void lcdDisplaySensors(LCD display, unsigned int fd,struct sGENERAL patient){
 	char Nokia_Temp[10],Nokia_BPM[10];
-	control.BPM = (unsigned int)serialGetchar(fd);
-	control.Temp = ((float)serialGetchar(fd)*5/(1023))/0.01;			
-	control.BPMState = healthState(patient,control.BPM);
-	control.TempState = isNormal(control.Temp);
+	//control.BPM = (unsigned int)serialGetchar(fd);
+	//control.Temp = ((float)serialGetchar(fd)*5/(1023))/0.01;			
+	//control.BPMState = healthState(patient,control.BPM);
+	//control.TempState = isNormal(control.Temp);
 
 	if(change_Layer == 2 && control.sWatching == 0){
+
+		NOKIABitmap(display,sensors);				delay_ms(1000);
 		control.sWatching = 1;
 		control.lastBPM = control.BPM;
 		printf("3-)Tela de Sensores!\n");
@@ -101,9 +105,9 @@ void lcdDisplaySensors(LCD display, unsigned int fd,struct sGENERAL patient){
 		NOKIAClear(display);
 		NOKIAString(display,20,0,"SENSORES");
 		NOKIAString(display,25,1,Nokia_Temp);
-		NOKIAString(display,20,2,control.TempState);
+		//NOKIAString(display,20,2,control.TempState);
 		NOKIAString(display,25,3,Nokia_BPM);
-		NOKIAString(display,20,4,control.BPMState);
+		//NOKIAString(display,20,4,control.BPMState);
 	}
 
 	if(change_Layer == 2 && control.sWatching == 1 && control.BPM != control.lastBPM){
@@ -112,9 +116,9 @@ void lcdDisplaySensors(LCD display, unsigned int fd,struct sGENERAL patient){
 		snprintf(Nokia_BPM,10,"%dBPM",control.BPM);	
 		NOKIAString(display,20,0,"SENSORES");
 		NOKIAString(display,25,1,Nokia_Temp);
-		NOKIAString(display,20,2,control.TempState);
+		//NOKIAString(display,20,2,control.TempState);
 		NOKIAString(display,25,3,Nokia_BPM);
-		NOKIAString(display,20,4,control.BPMState);
+		//NOKIAString(display,20,4,control.BPMState);
 	}
 }	
 
@@ -148,18 +152,15 @@ int main(void){
 		}
 		switch(change_Layer){
 			case 0:
-				NOKIABitmap(nokia,main_display);		delay_ms(1000);	
-				control.pWatching = control.sWatching = 0;
+				control.pWatching = 0;	control.sWatching = 0;
 				lcdDisplayMain(nokia,raspDuino);
 				break;
 			case 1:
-				NOKIABitmap(nokia,profile);				delay_ms(1000);
-				control.mWatching = control.sWatching = 0;
+				control.mWatching = 0;	control.sWatching = 0;
 				lcdDisplayProfile(nokia, person);
 				break;
 			case 2:
-				NOKIABitmap(nokia,sensors);				delay_ms(1000);
-				control.mWatching = control.pWatching = 0;
+				control.mWatching = 0;	control.pWatching = 0;
 				lcdDisplaySensors(nokia, raspDuino,person);
 				break;
 		}
