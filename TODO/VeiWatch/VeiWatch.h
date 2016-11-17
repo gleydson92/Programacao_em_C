@@ -1,7 +1,7 @@
 #ifndef __VEIWATCH_H__
 #define __VEIWATCH_H__
 #endif
-#include<stdint.h>
+#include <stdint.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <fcntl.h>

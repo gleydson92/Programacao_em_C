@@ -54,7 +54,7 @@ void lcdDisplayMain(unsigned int display,unsigned int fd){
 		char	Nokia_Temp[10],Nokia_BPM[10],INFO[15]={0,};
 	
 		Sensors.BPM = (unsigned int)serialGetchar(fd);
-		Sensors.Temp = ((float)serialGetchar(fd)*5/(1023))/0.01;			
+		Sensors.Temp = ((float)serialGetchar(fd)*5/(1023));			
 	
 		snprintf(Nokia_Temp,10,"%.1f*C",Sensors.Temp);
 		snprintf(Nokia_BPM,10,"%dBPM",Sensors.BPM);	
