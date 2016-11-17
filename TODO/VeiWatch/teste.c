@@ -60,42 +60,51 @@ Vei_Data getData(unsigned int fd, struct sGENERAL perfil){
 
 void lcdDisplayMain(LCD display,unsigned int fd, struct sGENERAL perfil){
 
-	char	Nokia_Temp[10],Nokia_BPM[10],INFO[15]={0,};
+	char	Nokia_Temp[10],Nokia_BPM[10],INFO1[15],INFO2[15],data[15],hora[15];
 	int result;
 	control = getData(fd,perfil);
 	getClockInformation(&info);
 	if(change_Layer == 0 && control.mWatching == 0){
+
 		NOKIABitmap(display,main_display);		delay_ms(1000);	
 		control.mWatching = 1;
 		control.lastMinute = info.minute;
 		printf("1-)Tela Principal!\n");
 		snprintf(Nokia_Temp,10,"%.1f*C",control.Temp);
-		snprintf(Nokia_BPM,10,"%dBPM",control.BPM);	
+		snprintf(Nokia_BPM,10,"%dBPM",control.BPM);
+		snprintf(INFO1,15,"%s",control.BPMState);
+		snprintf(INFO2,15,"%s",control.TempState);
+		snprintf(data,15,"%s",info.date);
+		snprintf(hora,15,"%s",info.time);
 		control.lastMinute = info.minute;
 		control.lastBPM = control.BPM;
 		NOKIAClear(display);
-
+		
 		NOKIAString(display,0,0,"PRINCIPAL");
 		NOKIADrawHL(display,1,84);
 		NOKIAString(display,0,2,Nokia_Temp);
 		NOKIAString(display,50,2,Nokia_BPM);
-		NOKIAString(display,0,3,info.date);
-		NOKIAString(display,50,3,info.time);
-		//NOKIAString(display,0,4,control.BPMState);
-		//NOKIAString(display,0,5,control.TempState);
+		NOKIAString(display,0,3,data);
+		NOKIAString(display,50,3,hora);
+		NOKIAString(display,0,4,INFO1);
+		NOKIAString(display,0,5,INFO2);
 	}
 	if(change_Layer == 0 && control.mWatching == 1 && (info.minute != control.lastMinute || control.BPM != control.lastBPM)){
 		
 		snprintf(Nokia_Temp,10,"%.1f*C",control.Temp);
-		snprintf(Nokia_BPM,10,"%dBPM",control.BPM);	
+		snprintf(Nokia_BPM,10,"%dBPM",control.BPM);
+		snprintf(INFO1,15,"%s",control.BPMState);
+		snprintf(INFO2,15,"%s",control.TempState);
+		snprintf(data,15,"%s",info.date);
+		snprintf(hora,15,"%s",info.time);
 		NOKIAString(display,0,0,"PRINCIPAL");
 		NOKIADrawHL(display,1,84);
 		NOKIAString(display,0,2,Nokia_Temp);
 		NOKIAString(display,50,2,Nokia_BPM);
-		NOKIAString(display,0,3,info.date);
-		NOKIAString(display,50,3,info.time);
-		NOKIAString(display,0,4,control.BPMState);
-		NOKIAString(display,0,5,control.TempState);
+		NOKIAString(display,0,3,data);
+		NOKIAString(display,50,3,hora);
+		NOKIAString(display,0,4,INFO1);
+		NOKIAString(display,0,5,INFO2);
 	}
 }
 void lcdDisplayProfile(LCD display, struct sGENERAL perfil){
@@ -120,7 +129,7 @@ void lcdDisplayProfile(LCD display, struct sGENERAL perfil){
 }	 
 
 void lcdDisplaySensors(LCD display, unsigned int fd,struct sGENERAL patient){
-	char Nokia_Temp[10],Nokia_BPM[10];
+	char Nokia_Temp[10],Nokia_BPM[10],TempState[15],BPMState[15];
 	control = getData(fd,patient);
 	if(change_Layer == 2 && control.sWatching == 0){
 
@@ -130,19 +139,23 @@ void lcdDisplaySensors(LCD display, unsigned int fd,struct sGENERAL patient){
 		printf("3-)Tela de Sensores!\n");
 		snprintf(Nokia_Temp,10,"%.1f*C",control.Temp);
 		snprintf(Nokia_BPM,10,"%dBPM",control.BPM);	
+		snprintf(TempState,15,"%s",control.TempState);
+		snprintf(BPMState,15,"%s",control.BPMState);
 		NOKIAClear(display);
 		NOKIAString(display,20,0,"SENSORES");
 		NOKIADrawHL(display,1,84);
 		NOKIAString(display,25,2,Nokia_Temp);
-		NOKIAString(display,20,3,control.TempState);
+		NOKIAString(display,20,3,TempState);
 		NOKIAString(display,25,4,Nokia_BPM);
-		NOKIAString(display,20,5,control.BPMState);
+		NOKIAString(display,20,5,BPMState);
 	}
 
 	if(change_Layer == 2 && control.sWatching == 1 && control.BPM != control.lastBPM){
 		control.lastBPM = control.BPM;
 		snprintf(Nokia_Temp,10,"%.1f*C",control.Temp);
-		snprintf(Nokia_BPM,10,"%dBPM",control.BPM);
+		snprintf(Nokia_BPM,10,"%dBPM",control.BPM);	
+		snprintf(TempState,15,"%s",control.TempState);
+		snprintf(BPMState,15,"%s",control.BPMState);
 		NOKIAString(display,20,0,"SENSORES");
 		NOKIADrawHL(display,1,84);
 		NOKIAString(display,25,2,Nokia_Temp);
@@ -205,8 +218,6 @@ int main(void){
 	control.pWatching = 0;	control.sWatching = 0;
 	lcdDisplayMain(nokia,raspDuino,person);
 	
-	change_Layer = 0;
-
 	while(1){
 		if(GPIORead(changeDisplay) == HIGH){
 			while(GPIORead(changeDisplay) == HIGH){}
