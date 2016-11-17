@@ -175,8 +175,8 @@ int main(void){
 	system("clear");
 	printf("Deseja Sobrescrever os Dados ? S/N\n");
 	unsigned int choose;
-	do{choose = (int)getch();}while(choose != 115 && choose != 83 && choose != 110 && choose != 78);
-
+	do{choose = getchar();}while(choose != 115 && choose != 83 && choose != 110 && choose != 78);
+	getchar();
 	if(choose == 115 || choose == 83){
 		NOKIABitmap(nokia,profile);
 		if(healthProfile(&person) == false){

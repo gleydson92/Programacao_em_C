@@ -29,7 +29,7 @@ bool healthProfile(struct sGENERAL *patient){
 	if(age > 55 && age < 66)	AgeGroup = 4;
 	if(age > 65)	AgeGroup = 5;
 	
-	printf("\nGênero [1]Masculino-[2]Feminino:");
+	printf("\nGênero [0]Masculino-[1]Feminino:");
 	do{scanf("%d",&sex);}while(sex > -1 && sex < 2);
 	getchar();
 	system("clear");
