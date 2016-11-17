@@ -81,8 +81,8 @@ void lcdDisplayMain(LCD display,unsigned int fd, struct sGENERAL perfil){
 		NOKIAString(display,50,2,Nokia_BPM);
 		NOKIAString(display,0,3,info.date);
 		NOKIAString(display,50,3,info.time);
-		NOKIAString(display,0,4,control.BPMState);
-		NOKIAString(display,0,5,control.TempState);
+		//NOKIAString(display,0,4,control.BPMState);
+		//NOKIAString(display,0,5,control.TempState);
 	}
 	if(change_Layer == 0 && control.mWatching == 1 && (info.minute != control.lastMinute || control.BPM != control.lastBPM)){
 		
@@ -202,30 +202,35 @@ int main(void){
 	GPIOExport(BL);				GPIODirection(BL,OUTPUT);
 	GPIOWrite(BL,HIGH);
 
+	control.pWatching = 0;	control.sWatching = 0;
+	lcdDisplayMain(nokia,raspDuino,person);
+	
+	change_Layer = 0;
+
 	while(1){
 		if(GPIORead(changeDisplay) == HIGH){
 			while(GPIORead(changeDisplay) == HIGH){}
 			change_Layer++;
 			if(change_Layer > 2)	change_Layer = 0;
+			switch(change_Layer){
+				case 0:
+					control.pWatching = 0;	control.sWatching = 0;
+					lcdDisplayMain(nokia,raspDuino,person);
+					break;
+				case 1:
+					control.mWatching = 0;	control.sWatching = 0;
+					lcdDisplayProfile(nokia,person);
+					break;
+				case 2:
+					control.mWatching = 0;	control.pWatching = 0;
+					lcdDisplaySensors(nokia,raspDuino,person);
+					break;
+			}
 		}
 		if(GPIORead(backLight) == HIGH){
 			while(GPIORead(backLight) == HIGH){}
 			GPIOWrite(BL,!GPIORead(BL));
 			printf("Luz [1]Acesa-[0]Apagada:%d\n",GPIORead(BL));
-		}
-		switch(change_Layer){
-			case 0:
-				control.pWatching = 0;	control.sWatching = 0;
-				lcdDisplayMain(nokia,raspDuino,person);
-				break;
-			case 1:
-				control.mWatching = 0;	control.sWatching = 0;
-				lcdDisplayProfile(nokia,person);
-				break;
-			case 2:
-				control.mWatching = 0;	control.pWatching = 0;
-				lcdDisplaySensors(nokia,raspDuino,person);
-				break;
 		}
 	}	
 }
