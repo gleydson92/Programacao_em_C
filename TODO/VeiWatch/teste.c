@@ -30,7 +30,7 @@ const unsigned char SERIAL_PORT[2][30] = {"/dev/ttyAMA0","/dev/ttyUSB0"};
 
 const unsigned int BAUDS[2] = {115200,9600};
 
-uint8_t change_Layer = 0;
+uint8_t change_Layer = 0,mWatching=0;
 
 Vei_Data control;
 
@@ -58,16 +58,22 @@ Vei_Data getData(unsigned int fd, struct sGENERAL perfil){
 	}	
 }
 
+void NOKIAClearLine(LCD lcd,uint8_t x){
+	char clear[14]={"              "};	
+	NOKIAMove(lcd,x,0);
+	for(register unsigned int cont = 0 ; cont < 14 ;cont++)	NOKIACharacter(lcd,clear[cont]);
+}
+
 void lcdDisplayMain(LCD display,unsigned int fd, struct sGENERAL perfil){
 
 	char	Nokia_Temp[10],Nokia_BPM[10],INFO1[15],INFO2[15],data[15],hora[15];
 	int result;
 	control = getData(fd,perfil);
 	getClockInformation(&info);
-	if(change_Layer == 0 && control.mWatching == 0){
+	if(change_Layer == 0 && mWatching == 0){
 
 		NOKIABitmap(display,main_display);		delay_ms(1000);	
-		control.mWatching = 1;
+		mWatching = 1;
 		control.lastMinute = info.minute;
 		printf("1-)Tela Principal!\n");
 		snprintf(Nokia_Temp,10,"%.1f*C",control.Temp);
@@ -80,7 +86,7 @@ void lcdDisplayMain(LCD display,unsigned int fd, struct sGENERAL perfil){
 		control.lastBPM = control.BPM;
 		NOKIAClear(display);
 		
-		NOKIAString(display,0,0,"PRINCIPAL");
+		NOKIAString(display,15,0,"PRINCIPAL");
 		NOKIADrawHL(display,1,84);
 		NOKIAString(display,0,2,Nokia_Temp);
 		NOKIAString(display,50,2,Nokia_BPM);
@@ -89,7 +95,7 @@ void lcdDisplayMain(LCD display,unsigned int fd, struct sGENERAL perfil){
 		NOKIAString(display,0,4,INFO1);
 		NOKIAString(display,0,5,INFO2);
 	}
-	if(change_Layer == 0 && control.mWatching == 1 && (info.minute != control.lastMinute || control.BPM != control.lastBPM)){
+	if(change_Layer == 0 && mWatching == 1 && (info.minute != control.lastMinute || control.BPM != control.lastBPM)){
 		
 		snprintf(Nokia_Temp,10,"%.1f*C",control.Temp);
 		snprintf(Nokia_BPM,10,"%dBPM",control.BPM);
@@ -97,7 +103,7 @@ void lcdDisplayMain(LCD display,unsigned int fd, struct sGENERAL perfil){
 		snprintf(INFO2,15,"%s",control.TempState);
 		snprintf(data,15,"%s",info.date);
 		snprintf(hora,15,"%s",info.time);
-		NOKIAString(display,0,0,"PRINCIPAL");
+		NOKIAString(display,15,0,"PRINCIPAL");
 		NOKIADrawHL(display,1,84);
 		NOKIAString(display,0,2,Nokia_Temp);
 		NOKIAString(display,50,2,Nokia_BPM);
@@ -217,7 +223,8 @@ int main(void){
 
 	//lcdDisplayMain(nokia,raspDuino,person);
 	//delay_ms(1000);
-	
+	change_Layer = 0; 
+	mWatching = 0;
 	while(1){
 		if(GPIORead(backLight) == HIGH){
 			while(GPIORead(backLight) == HIGH){}
