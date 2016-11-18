@@ -215,33 +215,15 @@ int main(void){
 	GPIOExport(BL);				GPIODirection(BL,OUTPUT);
 	GPIOWrite(BL,HIGH);
 
-	control.pWatching = 0;	control.sWatching = 0;
-	lcdDisplayMain(nokia,raspDuino,person);
+	//lcdDisplayMain(nokia,raspDuino,person);
+	//delay_ms(1000);
 	
 	while(1){
-		if(GPIORead(changeDisplay) == HIGH){
-			while(GPIORead(changeDisplay) == HIGH){}
-			change_Layer++;
-			if(change_Layer > 2)	change_Layer = 0;
-		}
 		if(GPIORead(backLight) == HIGH){
 			while(GPIORead(backLight) == HIGH){}
 			GPIOWrite(BL,!GPIORead(BL));
 			printf("Luz [1]Acesa-[0]Apagada:%d\n",GPIORead(BL));
 		}
-		switch(change_Layer){
-			case 0:
-				control.pWatching = 0;	control.sWatching = 0;
-				lcdDisplayMain(nokia,raspDuino,person);
-				break;
-			case 1:
-				control.mWatching = 0;	control.sWatching = 0;
-				lcdDisplayProfile(nokia,person);
-				break;
-			case 2:
-				control.mWatching = 0;	control.pWatching = 0;
-				lcdDisplaySensors(nokia,raspDuino,person);
-				break;
-		}
+		lcdDisplayMain(nokia,raspDuino,person);
 	}	
 }
