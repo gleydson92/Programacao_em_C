@@ -58,10 +58,27 @@ Vei_Data getData(unsigned int fd, struct sGENERAL perfil){
 	}	
 }
 
-void NOKIAClearLine(LCD lcd,uint8_t x){
-	char clear[14]={"              "};	
-	NOKIAMove(lcd,x,0);
-	for(register unsigned int cont = 0 ; cont < 14 ;cont++)	NOKIACharacter(lcd,clear[cont]);
+int NOKIAClearLine(LCD lcd,uint8_t y){
+	int indexBegin = 0,	  indexEnd = 0;
+	if		(y == 0){
+		indexBegin = 0;	  indexEnd = 83;
+	}else if(y == 1){
+		indexBegin = 84;  indexEnd = 167;
+	}else if(y == 2){
+		indexBegin = 168; indexEnd = 251;
+	}else if(y == 3){
+		indexBegin = 252; indexEnd = 335;
+	}else if(y == 4){
+		indexBegin = 336; indexEnd = 419;
+	}else if(y == 5){
+		indexBegin = 420; indexEnd = 503;
+	}
+	else return -1;
+
+	NOKIAMove(lcd,0,y);
+
+	for(register unsigned int index = indexBegin ; index < indexEnd ; index++)
+		NOKIAWrite(lcd,LCD_D, 0x00);
 }
 
 void lcdDisplayMain(LCD display,unsigned int fd, struct sGENERAL perfil){
