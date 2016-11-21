@@ -1,3 +1,4 @@
+/*scp ~/Projetos/Programacao_em_C/TODO/VeiWatch/teste.c pi@192.168.0.17:~/Programacao_em_C/TODO/VeiWatch/*/
 #include"RaspberryGPIO.h"
 #include<stdint.h>
 #include"RPiNOKIA.h"
@@ -13,7 +14,7 @@
 	que equivale a multiplicação por 100.
 	*5 é a tensão de alimentação do arduino !
  */
-#define COEF 5*100 // Nível de Tensão sobre o sensor vezes 100
+#define COEF 4.88*100 // Nível de Tensão sobre o sensor vezes 100
 
 #define RST 7
 #define CE 	8
@@ -42,43 +43,16 @@ Vei_Data getData(unsigned int fd, struct sGENERAL perfil){
 	if(ioctl (fd, FIONREAD, &result) != -1){
 		if(result>2){
 			int temp=0,bpm=0;
-			read(fd,&bpm,1);
 			read(fd,&temp,1);
-			if(bpm == 0 && temp == 0){
-				strcpy(receive.BPMState,"BPM Desconec.");
-				strcpy(receive.TempState,"Temp Desconec.");
-			}else{
-				receive.Temp = (float)(temp*COEF)/1023;
-				receive.BPM = bpm;		
-				receive.BPMState = healthState(perfil,bpm);
-				receive.TempState = isNormal(temp);
-			}
+			read(fd,&bpm,1);
+
+			receive.Temp = (float)(temp*COEF)/1023;
+			receive.BPM = (unsigned int)bpm;		
+			receive.BPMState = healthState(perfil,bpm);
+			receive.TempState = isNormal(temp);
 		return receive;
 		}
 	}	
-}
-
-int NOKIAClearLine(LCD lcd,uint8_t y){
-	int indexBegin = 0,	  indexEnd = 0;
-	if		(y == 0){
-		indexBegin = 0;	  indexEnd = 83;
-	}else if(y == 1){
-		indexBegin = 84;  indexEnd = 167;
-	}else if(y == 2){
-		indexBegin = 168; indexEnd = 251;
-	}else if(y == 3){
-		indexBegin = 252; indexEnd = 335;
-	}else if(y == 4){
-		indexBegin = 336; indexEnd = 419;
-	}else if(y == 5){
-		indexBegin = 420; indexEnd = 503;
-	}
-	else return -1;
-
-	NOKIAMove(lcd,0,y);
-
-	for(register unsigned int index = indexBegin ; index < indexEnd ; index++)
-		NOKIAWrite(lcd,LCD_D, 0x00);
 }
 
 void lcdDisplayMain(LCD display,unsigned int fd, struct sGENERAL perfil){
@@ -120,7 +94,7 @@ void lcdDisplayMain(LCD display,unsigned int fd, struct sGENERAL perfil){
 		snprintf(INFO2,15,"%s",control.TempState);
 		snprintf(data,15,"%s",info.date);
 		snprintf(hora,15,"%s",info.time);
-		NOKIAString(display,15,0,"PRINCIPAL");
+		NOKIAString(display,13,0,"PRINCIPAL");
 		NOKIADrawHL(display,1,84);
 		NOKIAString(display,0,2,Nokia_Temp);
 		NOKIAString(display,50,2,Nokia_BPM);
@@ -238,8 +212,6 @@ int main(void){
 	GPIOExport(BL);				GPIODirection(BL,OUTPUT);
 	GPIOWrite(BL,HIGH);
 
-	//lcdDisplayMain(nokia,raspDuino,person);
-	//delay_ms(1000);
 	change_Layer = 0; 
 	mWatching = 0;
 	while(1){

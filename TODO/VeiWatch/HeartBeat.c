@@ -2,7 +2,7 @@
 #include"RaspberryGPIO.h"
 #include<string.h>
 #define NSAMPLES 10
-char sReport[8][15]={"LOW PULSE!!!","Excellent!","Very Good!","Good!","Above Average!","Average!","Below Average!","TOO HIGH!!!"};
+char sReport[9][15]={"LOW PULSE!!!","Excellent!!!","Very Good!!!","  Good !!!  ","Above Averag"," Average !!!","Below Averag","TOO HIGH !!!","BPM Desconec"};
 
 unsigned long getTime(void){
 	/*	Função deve ser portada para a Biblioteca "RaspberryGPIO.h", essa Função depende da Biblioteca <sys/time.h>	*/
@@ -92,6 +92,7 @@ bool healthInit(uint8_t iSex,uint8_t iAgeGroup,struct sGENERAL *patient){
 	else return false;
 }
 char* healthState(struct sGENERAL person,unsigned int pulse){
+	while (pulse == 0)	return sReport[8];
 	while (pulse < person.Excellent)	return sReport[0];
 	while (pulse > person.Excellent-1 && pulse < person.VerryGood)	return sReport[1];
 	while (pulse > person.VerryGood-1 && pulse < person.Good)	return sReport[2];
