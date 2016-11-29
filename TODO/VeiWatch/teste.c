@@ -218,7 +218,6 @@ int main(void){
 		if(GPIORead(backLight) == HIGH){
 			while(GPIORead(backLight) == HIGH){}
 			GPIOWrite(BL,!GPIORead(BL));
-			printf("Luz [1]Acesa-[0]Apagada:%d\n",GPIORead(BL));
 		}
 		lcdDisplayMain(nokia,raspDuino,person);
 	}	

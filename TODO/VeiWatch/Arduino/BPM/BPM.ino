@@ -4,10 +4,11 @@
 #define NSAMPLES 10
 #define AUXSIZE 5
 #define STRSIZE 10
+#define delay_ms 1000
 /* Global Variables */
 unsigned int times[NSAMPLES],aux=0,iCount=0,cont=0;
 
-uint8_t Data_Sended = false;
+uint8_t Data_Sended = false,First_Data = false;
 
 void setup() {
   pinMode(LM35,INPUT);
@@ -15,30 +16,16 @@ void setup() {
   times[0]=millis();
   aux = times[0];
 }
-
-char *tempFormat(int temperature){
-  char *toReturn,toFormat[AUXSIZE];
-  memset(toFormat,'\0',AUXSIZE);
-  if     (temperature  <   10)  snprintf(toFormat,AUXSIZE,"000%d",temperature);
-  else if( temperature <  100)  snprintf(toFormat,AUXSIZE," 00%d",temperature);
-  else if( temperature < 1000)  snprintf(toFormat,AUXSIZE,"  0%d",temperature);
-  else                          snprintf(toFormat,AUXSIZE,"   %d",temperature);
-  toReturn = toFormat;
-  return toReturn;
-}
-char *bpmFormat(int bpm){
-  char *toReturn, toFormat[AUXSIZE];
-  memset(toFormat,'\0',AUXSIZE);
-  if     (bpm <  10)  snprintf(toFormat,AUXSIZE,"00%d",bpm);
-  else if(bpm < 100)  snprintf(toFormat,AUXSIZE," 0%d",bpm);
-  else                snprintf(toFormat,AUXSIZE,"  %d",bpm);
-  toReturn = toFormat;
-  return toReturn;
-}
-
 int analogTemp = 0;
 void loop(){
-  if(analogRead(A0) < 500){   
+  if(analogRead(A0) < 800){   
+    if(First_Data == false) {
+        Serial.write(0);
+        Serial.flush();
+        Serial.write(0);
+        Serial.flush();
+        First_Data = true;
+    }
     pinMode(SENSORPULSE,INPUT);
     if(digitalRead(SENSORPULSE)==HIGH){
       while(digitalRead(SENSORPULSE)==HIGH){}
@@ -55,34 +42,45 @@ void loop(){
       Serial.write(analogTemp);
       Serial.flush();
       Serial.write(iCount*6);
+      Serial.flush();
       aux = millis();
       iCount = 0; analogTemp = 0;
     }
     if((times[1]-times[0]) > 60000){
       analogTemp = analogTemp / iCount;
-      Serial.flush();
       Serial.write(analogTemp);
       Serial.flush();
       Serial.write(cont);
+      Serial.flush();
       times[0]=millis();
       cont = 0; analogTemp = 0; iCount = 0;
     }
   }
-  if(digitalRead(A0)==HIGH){
+  if(analogRead(A0)>800){
     if(Data_Sended == false){
       uint8_t dataToSend = 0;
       
       pinMode(SENSORPULSE,OUTPUT);// Only to do not receive any data in this pin
       Serial.flush();
-      for(unsigned int count = 0; count < 5 ; count ++){
+      for(unsigned int count = 0; count < 2 ; count ++){
         Serial.write(dataToSend);
         Serial.flush();
         Serial.write(dataToSend);
+        Serial.flush();
         delay(1);
       }
       iCount = 0; cont = 0;  analogTemp = 0;
       Data_Sended = true;
-      
+      First_Data = false;
     }
+    else if(Data_Sended == true && analogRead(A0) > 800 ) blinkLED(Data_Sended);
+  }
+}
+void blinkLED(uint8_t Data){
+  static unsigned long int currentTime = 0, previousTime = 0;
+  currentTime = millis();
+  if(Data == true && currentTime - previousTime > delay_ms){
+    previousTime = currentTime;
+    digitalWrite(SENSORPULSE,!digitalRead(SENSORPULSE));
   }
 }

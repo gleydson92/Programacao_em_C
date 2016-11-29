@@ -1,4 +1,5 @@
 #include"completa.h"
+
 int cria(Node *myList){
 	myList = (Node*)malloc(sizeof(Node));
 	myList->data = 0;
