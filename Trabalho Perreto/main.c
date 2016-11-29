@@ -4,7 +4,7 @@
 #include<stdlib.h>
 #include"binary_tree.h"
 int strToNum(char *string_to_num){
-	while (*string_to_num) {
+	while (string_to_num) {
     	if (isdigit(*string_to_num)){ 
     	    long val = strtol(string_to_num, &string_to_num, 10); 
 			return val;
